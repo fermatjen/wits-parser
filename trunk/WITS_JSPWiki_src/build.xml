@@ -1,0 +1,38 @@
+<project default="WITS">
+
+  <property name="src.home" value="."/>
+
+  <target name="compile">
+     <javac srcdir="${src.home}" />
+  </target>
+
+  <target name="jar" depends="compile">
+     <delete file="WITS.jar"/>
+     <delete file="MANIFEST.MF"/>
+     <manifest file="MANIFEST.MF">
+        <attribute name="Built-By" value="${user.name}"/>
+        <attribute name="Main-Class" value="org.wits.WITS"/>
+	<attribute name="Built-Date" value="${TODAY}"/> 
+    </manifest>
+
+   <tstamp>
+     <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+   </tstamp>
+
+    <jar destfile="WITS.jar"
+         basedir="."
+         includes="**/*.class"
+	 manifest="MANIFEST.MF"
+         />
+  </target>
+
+  <target name="cleanup">
+       <delete>
+         <fileset dir="." includes="**/*.class"/>
+         <fileset file="MANIFEST.MF"/>
+       </delete>  
+  </target>
+  
+  <target name="buildWITS" depends="compile,jar,cleanup" />
+</project>
+
