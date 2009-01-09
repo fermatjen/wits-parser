@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 public class WITSProperties {
 
     public static String WITS_BrandName = "WITS [JSPWiki Parser] - fermatjen@yahoo.com";
-    public static String WITS_VersionName = "V0.3.2";
+    public static String WITS_VersionName = "V0.3.3_SVN";
     public static String WITS_AllienBrandMessage = "This is WITS - JSPWiki Parser. Your input file[s] may have alien wiki content. Use the correct WITS Parser or use --force option.";
     public static String WITS_MailingList = "fermatjen@yahoo.com";
     public static String WITS_UsageString1 = "[--docbook]    - Enable DocBook Output.\r\n[--test]    - Do not write output to file.\r\n[--force]    - Force conversion for alien wiki formats.\r\n[--outputdir <path>]    - Provide the path to output Dir.\r\n[--config <configFile>]    - Provide a configuration file.\r\n";
