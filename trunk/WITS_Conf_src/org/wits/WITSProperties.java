@@ -50,7 +50,7 @@ public class WITSProperties {
     public String WITS_PubName = "Some Company Inc.";
     public String WITS_CopyrightYear = "2009";
     public String WITS_BookAbstract = "Enter abstract here";
-    public String WITS_LegalNotice = "Copyright 2009 Sun Microsystems, Inc.</para><para>DOCUMENTATION IS PROVIDED &ldquo;AS IS&rdquo; AND ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE DISCLAIMED, EXCEPT TO THE EXTENT THAT SUCH DISCLAIMERS ARE HELD TO BE LEGALLY INVALID.";
+    public String WITS_LegalNotice = "Copyright 2009 Some Company, Inc.</para><para>DOCUMENTATION IS PROVIDED &ldquo;AS IS&rdquo; AND ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE DISCLAIMED, EXCEPT TO THE EXTENT THAT SUCH DISCLAIMERS ARE HELD TO BE LEGALLY INVALID.";
     public String WITS_DanglerSectionSummary = "Enter section summary here";
     public String WITS_DanglerSectionTitle = "Enter section title here";
     public String WITS_DanglerTableTitle = "Enter table title here";
