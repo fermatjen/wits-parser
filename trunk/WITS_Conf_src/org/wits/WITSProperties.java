@@ -35,7 +35,7 @@ public class WITSProperties {
     public static String WITS_BrandName = "WITS [Confluence Parser] - fermatjen@yahoo.com";
     public static String WITS_VersionName = "V0.7.3_SVN";
     public static String WITS_AllienBrandMessage = "This is WITS - Confluence Parser. Your input file[s] may have alien wiki content. Use the correct WITS Parser or use the --force option.";
-    public static String WITS_MailingList = "fermatjen@sun.com";
+    public static String WITS_MailingList = "fermatjen@yahoo.com";
     public static String WITS_UsageString1 = "[--docbook]    - Enable DocBook Output.\r\n[--test]    - Do not write output to file.\r\n[--force]    - Force conversion for alien wiki formats.\r\n[--outputdir <path>]    - Provide the path to output Dir.\r\n[--config <configFile>]    - Provide a configuration file.\r\n";
     public static String WITS_UsageString2 = "\r\nExample 1: Create SolBook Output.\r\n java -jar WITS.jar input1.txt\r\n java -jar WITS.jar input1.txt input2.txt input3.txt\r\n java -jar WITS.jar --config WITS.props input1.txt\r\n java -jar WITS.jar --config WITS.props --outputdir /MyDir input1.txt\r\n\r\nExample 2: Create DocBook Output.\r\n java -jar WITS.jar --docbook input1.txt\r\n java -jar WITS.jar --docbook input1.txt input2.txt input3.txt\r\n java -jar WITS.jar --docbook --config WITS.props input1.txt\r\n java -jar WITS.jar --docbook --config WITS.props --outputdir /MyDir input1.txt";
     public static String WITS_NLString = "\r\n";
