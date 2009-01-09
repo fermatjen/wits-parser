@@ -35,7 +35,7 @@ public class DefaultContentCase implements WITSCase{
 
         int offset = 0;
 
-        int l1_loc = source.indexOf("http//wikis.sun.com/mywiki", offset);
+        int l1_loc = source.indexOf("http//wikis.company.com/mywiki", offset);
 
         if(l1_loc != -1){
             return "FAIL";
