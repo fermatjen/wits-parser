@@ -1,8 +1,29 @@
 #labels Featured,Phase-Deploy
 =About WITS=
+
 WITS is a Wiki to Structured Markup converter that can convert wiki files of different markups (Confluence and JSPWiki) to a structured format like DocBook v5 XML. 
 
 WITS is a java tool and is available as an executable jar file.
+
+=Building WITS Parser from the Source=
+
+For building the WITS parser from source, you need to have ANT and Java SE SDK installed in your system. The following instructions shows you how you can get the source from the SVN repository and how you can build it yourself.
+
+==Get the Source==
+
+ # {{{svn checkout http://wits-parser.googlecode.com/svn/trunk/ wits-parser-read-only}}}
+ # {{{cd wits-parser/trunk/WITS_Conf_src}}}
+ # {{{ant buildWITS}}} (to build the Confluence Parser)
+
+or
+
+ # {{{svn checkout http://wits-parser.googlecode.com/svn/trunk/ wits-parser-read-only}}}
+ # {{{cd wits-parser/trunk/WITS_JSPWiki_src}}}
+ # {{{ant buildWITS}}} (to build the JSPWiki Parser)
+
+{{{buildWITS}}} is the name of the ANT target defined in the {{{build.xml}}} file. While building,ignore the {{{Xlint}}} warning. 
+
+When you are done with the building, WITS.jar file will be created.
 
 =Running  the tool=
 
@@ -232,5 +253,3 @@ Running WITS cases on test.txt
 }}}
 
 The parser produces a DocBook V5 XML block from your Wiki using some Wiki filters and will try to validate the block against some test cases. If you get a FAIL for any non-fatal test, that is still OK. Nothing to panic. If the XML validity test fails, send a mail to {{{fermatjen@yahoo.com}}}.
-
-
