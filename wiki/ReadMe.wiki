@@ -76,15 +76,7 @@ Usage:
 [--outputdir <path>]    - Provide the path to output Dir.
 [--config <configFile>]    - Provide a configuration file.
 
-
-Example 1: Create SolBook Output.
- java -jar WITS.jar input1.txt
- java -jar WITS.jar inputDir
- java -jar WITS.jar input1.txt input2.txt input3.txt
- java -jar WITS.jar --config WITS.props input1.txt
- java -jar WITS.jar --config WITS.props --outputdir /MyDir input1.txt
-
-Example 2: Create DocBook Output.
+Example 1: Create DocBook Output.
  java -jar WITS.jar --docbook input1.txt
  java -jar WITS.jar --docbook inputDir
  java -jar WITS.jar --docbook input1.txt input2.txt input3.txt
