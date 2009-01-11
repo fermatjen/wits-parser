@@ -96,9 +96,9 @@ In a summary,
  # Auto flattening and auto insertion of headings.
  # Support for tables
  # Supports inline markups like emphasis, links, and literals.
- # Pattern based lookup based on SolBook context and pre-set wiki rules.
- # Cloud parsing to overcast text. Reduces parsing time to be always less than 7secs. on any size of wiki page.
- # Performance - Faster string search algo., non-synchronized buffered search, native I/O etc.
+ # Pattern based lookup based on context and preset wiki rules.
+ # Cloud parsing to overcast text. Faster parsing time.
+ # Performance - Faster string search algo., non-synchronized string buffered search, native I/O etc.
 
 =Some Examples for Clean Conversion=
 
