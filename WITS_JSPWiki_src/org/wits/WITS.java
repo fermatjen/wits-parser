@@ -18,11 +18,9 @@
 package org.wits;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 import org.wits.debugger.WITSDebugger;
 import org.wits.test.TestHandler;
 import org.wits.writer.solbookwriter.SolChapterWriter;
@@ -37,6 +35,7 @@ public class WITS {
 
     private static boolean isDebuggingOn = false;
     private static String inputFile = "input.txt";
+    private static ArrayList inputFiles = null;
     private static String outputFile = ".";
     private static boolean singleInputFile = true;
     private static boolean isNullOutput = false;
@@ -59,7 +58,6 @@ public class WITS {
                 return "WITS" + "." + ext;
             }
         }
-
         File _file = new File(inputFile);
         String fName = _file.getName();
         int loc = fName.indexOf(".");
@@ -89,14 +87,15 @@ public class WITS {
      */
     public static void main(String ar[]) {
 
+        //Read WITS Global Properties
         //Init Properties
         props = new WITSProperties();
+        inputFiles = new ArrayList();
 
         String WITS_BrandName = WITSProperties.WITS_BrandName;
         String WITS_VersionName = WITSProperties.WITS_VersionName;
 
         String WITS_NLString = WITSProperties.WITS_NLString;
-
         //Check docbookv5 output
         boolean isDocBookOutput = false;
 
@@ -113,9 +112,6 @@ public class WITS {
                 printUsage();
             }
         }
-
-
-
 
         System.out.println("Applying Wiki Filters...");
         WITSProcessor processor = null;
@@ -200,7 +196,7 @@ public class WITS {
 
         for (int i = 0; i < arsLength; i++) {
             //System.out.println("Checking ARG:"+ar[i]);
-            if (ar[i].equalsIgnoreCase("--docbook") || ar[i].equalsIgnoreCase("--force") || ar[i].equalsIgnoreCase("--test")) {
+            if (ar[i].equalsIgnoreCase("--solbook") || ar[i].equalsIgnoreCase("--docbook") || ar[i].equalsIgnoreCase("--force") || ar[i].equalsIgnoreCase("--test")) {
                 continue;
             }
             if (ar[i].equalsIgnoreCase("--config")) {
@@ -216,31 +212,58 @@ public class WITS {
 
         //System.out.println("Total Input Files:"+aLength);
 
-        if (aLength > 1) {
+        //Build the Input Files ArrayList
+        for (int i = 0; i < arsLength; i++) {
+            //check sub options
+
+            if (ar[i].equalsIgnoreCase("--solbook") || ar[i].equalsIgnoreCase("--docbook") || ar[i].equalsIgnoreCase("--test") || ar[i].equalsIgnoreCase("--force")) {
+                continue;
+            }
+            if (ar[i].equalsIgnoreCase("--config")) {
+                i++;
+                continue;
+            }
+            if (ar[i].equalsIgnoreCase("--outputdir")) {
+                i++;
+                continue;
+            }
+
+            //Handle dir here
+            File temp = new File(ar[i]);
+            if (!temp.exists()) {
+                System.out.println("File not found: " + temp.getName());
+                continue;
+            }
+            if (temp.isDirectory()) {
+                System.out.println("Reading Dir. Content: " + temp.getName());
+                buildDirContent(temp.getAbsolutePath());
+            } else {
+                //This could be an input file entry
+                if (ar[i].endsWith(".txt") || ar[i].endsWith(".TXT")) {
+                    System.out.println("Adding " + temp.getAbsolutePath() + "");
+                    inputFiles.add(temp.getAbsolutePath());
+                } else {
+                    System.out.println("Ignoring " + temp.getAbsolutePath() + "");
+                }
+            }
+        }
+
+        //Fixed the code to directly read from the ArrayList
+        if (inputFiles.size() > 1) {
             singleInputFile = false;
         }
 
         try {
+            System.out.println("\r\nTo Parse: "+inputFiles.size()+" files.");
 
-            for (int i = 0; i < arsLength; i++) {
-                inputFile = ar[i];
-                //check sub options
+            for (int i = 0; i < inputFiles.size(); i++) {
+                inputFile = (String) inputFiles.get(i);
 
-                if (ar[i].equalsIgnoreCase("--docbook") || ar[i].equalsIgnoreCase("--test") || ar[i].equalsIgnoreCase("--force")) {
-                    continue;
-                }
-                if (ar[i].equalsIgnoreCase("--config")) {
-                    i++;
-                    continue;
-                }
-                if (ar[i].equalsIgnoreCase("--outputdir")) {
-                    i++;
-                    continue;
-                }
+                System.out.println("\r\nReading..."+inputFile);
+
                 processor = new WITSProcessor(isDocBookOutput, isForceParsing, isDebuggingOn, inputFile, outputFile, props);
                 processor.setWitsID(witsID);
 
-                long start = System.currentTimeMillis();
 
                 //handle parsing error
                 String cleanSGML = null;
@@ -256,14 +279,14 @@ public class WITS {
 
                 witsID = processor.getWitsID();
 
-                double timeTaken = (end - start) * 0.001;
-                totalTimeTaken = totalTimeTaken + timeTaken;
+
 
                 //check alien formats
                 if (cleanSGML.startsWith("ERROR:")) {
                     System.out.println(cleanSGML.substring(6, cleanSGML.length()));
                     System.exit(0);
                 }
+
 
                 if (!isDocBookOutput) {
                     System.out.println("Building SolBook Content...");
@@ -281,7 +304,6 @@ public class WITS {
                 WITSDebugger debugger = processor.getDebugger();
                 String debugString = debugger.getDebugString();
                 //System.out.println("DEBUG STRING:"+debugString);
-
 
 
                 if (!isNullOutput) {
@@ -304,10 +326,8 @@ public class WITS {
                     handler.runTestCases();
                     handler.displayResults();
                 }
+
             }
-
-
-
             if (!isNullOutput) {
                 //write the book file now
                 File bookPath = null;
@@ -326,7 +346,7 @@ public class WITS {
             if (!isNullOutput) {
                 //System.out.println("Note - Some placeholder strings were added during conversion. Replace them with correct text before publishing.");
             }
-            System.out.println("");
+
 
         } catch (Exception ex) {
             //WITSDebugger debugger = processor.getDebugger();
@@ -338,6 +358,7 @@ public class WITS {
             //System.out.println("Cause: " + ex.toString());
             writeParserErrorOutput(ex.getMessage());
             System.out.println(WITSProperties.WITS_ParseErrorMessage);
+            ex.printStackTrace();
             System.exit(0);
         }
 
@@ -353,6 +374,29 @@ public class WITS {
         } catch (IOException ex) {
             System.out.println("Error writing to the error file.");
             System.exit(0);
+        }
+    }
+
+    private static void buildDirContent(String parent) {
+
+        File temp = new File(parent);
+        String children[] = temp.list();
+
+        for (int i = 0; i < children.length; i++) {
+            File temp2 = new File(temp, children[i]);
+
+            if (temp2.isDirectory()) {
+                buildDirContent(temp2.getAbsolutePath());
+            } else {
+                //already a file
+                if (children[i].endsWith(".txt") || children[i].endsWith(".TXT")) {
+                    System.out.println("Adding " + temp2.getAbsolutePath() + "");
+                    inputFiles.add(temp2.getAbsolutePath());
+                } else {
+                    System.out.println("Ignoring " + temp2.getAbsolutePath() + "");
+                }
+
+            }
         }
 
     }
