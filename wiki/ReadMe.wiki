@@ -21,9 +21,29 @@ or
  # {{{cd wits-parser/trunk/WITS_JSPWiki_src}}}
  # {{{ant buildWITS}}} (to build the JSPWiki Parser)
 
-{{{buildWITS}}} is the name of the ANT target defined in the {{{build.xml}}} file. While building,ignore the {{{Xlint}}} warning. 
+{{{buildWITS}}} is the name of the ANT target defined in the {{{build.xml}}} file.
 
-When you are done with the building, WITS.jar file will be created.
+When you are done with the building, WITS.jar file will be created. Here is the sample output:
+
+{{{
+$ ls
+build.xml  org
+$ ant buildWITS
+Buildfile: build.xml
+
+compile:
+    [javac] Compiling 36 source files
+
+jar:
+      [jar] Building jar: ../wits-parser-read-only/WITS_Conf_src/WITS.jar
+
+cleanup:
+
+buildWITS:
+
+BUILD SUCCESSFUL
+Total time: 2 seconds
+}}}
 
 =Running  the tool=
 
