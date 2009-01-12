@@ -45,6 +45,8 @@ BUILD SUCCESSFUL
 Total time: 2 seconds
 }}}
 
+Remember building will be clean only when you use Sun JDK 1.6 or higher. Jikes doesn't work quite well with Generics. If you get {{{javac}} warning and if build fails, set the {{{JAVA_HOME}}} variable to the correct Sun JDK 1.6 directory path and try again.
+
 =Running  the tool=
 
 {{{
