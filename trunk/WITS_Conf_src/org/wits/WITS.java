@@ -35,7 +35,7 @@ public class WITS {
 
     private static boolean isDebuggingOn = false;
     private static String inputFile = "input.txt";
-    private static ArrayList <String> inputFiles = null;
+    private static ArrayList<String> inputFiles = null;
     private static String outputFile = ".";
     private static boolean singleInputFile = true;
     private static boolean isNullOutput = false;
@@ -90,8 +90,8 @@ public class WITS {
         //Read WITS Global Properties
         //Init Properties
         props = new WITSProperties();
-        inputFiles = new ArrayList <String> ();
-        
+        inputFiles = new ArrayList<String>();
+
         String WITS_BrandName = WITSProperties.WITS_BrandName;
         String WITS_VersionName = WITSProperties.WITS_VersionName;
 
@@ -236,7 +236,7 @@ public class WITS {
             }
             if (temp.isDirectory()) {
                 System.out.println("Reading Dir. Content: " + temp.getName());
-                buildDirContent(temp.getAbsolutePath());                
+                buildDirContent(temp.getAbsolutePath());
             } else {
                 //This could be an input file entry
                 if (ar[i].endsWith(".txt") || ar[i].endsWith(".TXT")) {
@@ -254,13 +254,13 @@ public class WITS {
         }
 
         try {
-            System.out.println("\r\nTo Parse: "+inputFiles.size()+" files.");
+            System.out.println("\r\nTo Parse: " + inputFiles.size() + " files.");
 
             for (int i = 0; i < inputFiles.size(); i++) {
                 inputFile = (String) inputFiles.get(i);
 
-                System.out.println("\r\nReading..."+inputFile);
-                
+                System.out.println("\r\nReading..." + inputFile);
+
                 processor = new WITSProcessor(isDocBookOutput, isForceParsing, isDebuggingOn, inputFile, outputFile, props);
                 processor.setWitsID(witsID);
 
@@ -328,25 +328,28 @@ public class WITS {
                 }
 
             }
-            if (!isNullOutput) {
-                //write the book file now
-                File bookPath = null;
 
-                if (!isDocBookOutput) {
-                    bookPath = new File(outputFile, getOutputFile("book"));
-                } else {
-                    bookPath = new File(outputFile, getOutputFile("book.xml"));
+            if (inputFiles.size() > 0) {
+                if (!isNullOutput) {
+                    //write the book file now
+                    File bookPath = null;
+
+                    if (!isDocBookOutput) {
+                        bookPath = new File(outputFile, getOutputFile("book"));
+                    } else {
+                        bookPath = new File(outputFile, getOutputFile("book.xml"));
+                    }
+                    WITSFileWriter fileWriter = new WITSFileWriter(isDocBookOutput, null, bookPath, null, props);
+
+                    fileWriter.writeBookOutput(bookContent);
                 }
-                WITSFileWriter fileWriter = new WITSFileWriter(isDocBookOutput, null, bookPath, null, props);
-
-                fileWriter.writeBookOutput(bookContent);
             }
 
             //System.out.println("Completed in: " + totalTimeTaken + " secs.");
             if (!isNullOutput) {
                 //System.out.println("Note - Some placeholder strings were added during conversion. Replace them with correct text before publishing.");
             }
-            
+
 
         } catch (Exception ex) {
             //WITSDebugger debugger = processor.getDebugger();
@@ -378,12 +381,12 @@ public class WITS {
     }
 
     private static void buildDirContent(String parent) {
-                
+
         File temp = new File(parent);
         String children[] = temp.list();
 
         for (int i = 0; i < children.length; i++) {
-            File temp2 = new File(temp, children[i]);            
+            File temp2 = new File(temp, children[i]);
 
             if (temp2.isDirectory()) {
                 buildDirContent(temp2.getAbsolutePath());
@@ -395,7 +398,7 @@ public class WITS {
                 } else {
                     System.out.println("Ignoring " + temp2.getAbsolutePath() + "");
                 }
-                
+
             }
         }
 
