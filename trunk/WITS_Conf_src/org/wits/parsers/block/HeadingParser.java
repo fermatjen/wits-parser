@@ -81,7 +81,7 @@ public class HeadingParser implements WITSParser{
         int offset3 = 0;
         int bufferInsertOffset = 0;
         debugger.showDebugMessage("HeadingIC", uncleanSGML.length(), "Fixing Heading Hierarchy...");
-        TreeMap sectPositions = new TreeMap();
+        TreeMap <Integer, String> sectPositions = new TreeMap <Integer, String>();
         StringBuilder _handle = new StringBuilder(uncleanSGML);
 
         while (true) {

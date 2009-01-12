@@ -18,7 +18,6 @@
 
 package org.wits.test;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -29,13 +28,13 @@ import java.util.LinkedHashMap;
 public class TestHandler {
 
     private String source = null;
-    private LinkedHashMap resultMap = null;
+    private LinkedHashMap <String, String> resultMap = null;
     private String fileName = null;
 
     public TestHandler(String fileName, String source) {
         this.source = source;
         this.fileName = fileName;
-        resultMap = new LinkedHashMap();
+        resultMap = new LinkedHashMap <String, String> ();
     }
 
     public void evaluateCases() {
