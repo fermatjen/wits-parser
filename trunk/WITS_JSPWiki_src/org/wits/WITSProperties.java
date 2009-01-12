@@ -25,8 +25,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -80,7 +78,7 @@ public class WITSProperties {
             System.exit(0);
         }
         try {
-            HashMap witsKeys = new HashMap();
+            HashMap <String, String> witsKeys = new HashMap <String, String> ();
 
             while ((str = in.readLine()) != null) {
                 if (str.startsWith("WITS_") && str.indexOf("=") != -1) {
