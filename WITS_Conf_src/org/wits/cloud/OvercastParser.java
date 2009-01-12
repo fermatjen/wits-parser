@@ -29,7 +29,7 @@ import org.wits.patterns.StringHandler;
 public class OvercastParser {
 
     private String uncleanSGML = null;
-    private HashMap overcastMap = null;
+    private HashMap <String, String> overcastMap = null;
     private int overcastID = 1;
     private WITSDebugger debugger = null;
 
@@ -173,7 +173,7 @@ public class OvercastParser {
      *
      * @param overCastMap
      */
-    public void setOvercastMap(HashMap overCastMap) {
+    public void setOvercastMap(HashMap <String, String> overCastMap) {
         this.overcastMap = overCastMap;
     }
 
@@ -195,7 +195,7 @@ public class OvercastParser {
         debugger.showDebugMessage("OvercastIC", 0, "OvercastIC Invoked.");
 
         //Initialize overcast map
-        overcastMap = new HashMap();
+        overcastMap = new HashMap <String, String>();
 
         StringBuilder _handle = new StringBuilder();
         int offset = 0;

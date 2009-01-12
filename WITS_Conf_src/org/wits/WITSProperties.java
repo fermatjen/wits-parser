@@ -76,7 +76,7 @@ public class WITSProperties {
             System.exit(0);
         }
         try {
-            HashMap witsKeys = new HashMap();
+            HashMap <String,String> witsKeys  = new HashMap <String,String> ();
 
             while ((str = in.readLine()) != null) {
                 if (str.startsWith("WITS_") && str.indexOf("=") != -1) {

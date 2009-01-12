@@ -35,7 +35,7 @@ public class WITS {
 
     private static boolean isDebuggingOn = false;
     private static String inputFile = "input.txt";
-    private static ArrayList inputFiles = null;
+    private static ArrayList <String> inputFiles = null;
     private static String outputFile = ".";
     private static boolean singleInputFile = true;
     private static boolean isNullOutput = false;
@@ -90,7 +90,7 @@ public class WITS {
         //Read WITS Global Properties
         //Init Properties
         props = new WITSProperties();
-        inputFiles = new ArrayList();
+        inputFiles = new ArrayList <String> ();
         
         String WITS_BrandName = WITSProperties.WITS_BrandName;
         String WITS_VersionName = WITSProperties.WITS_VersionName;
