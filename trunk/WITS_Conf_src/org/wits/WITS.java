@@ -42,7 +42,6 @@ public class WITS {
     private static boolean isForceParsing = false;
     //There could be diff. brands
     //Passing brand is mandatory
-    private static String wikiBrand = null;
     private static String configPath = null;
     private static WITSProperties props = null;
     private static boolean outputDir = false;
@@ -253,6 +252,9 @@ public class WITS {
             singleInputFile = false;
         }
 
+        int totalErrors = 0;
+        int totalWarnings = 0;
+
         try {
             System.out.println("\r\nTo Parse: " + inputFiles.size() + " files.");
 
@@ -325,9 +327,14 @@ public class WITS {
                     TestHandler handler = new TestHandler(inputFile, header1);
                     handler.runTestCases();
                     handler.displayResults();
+                    totalErrors += handler.getErrorCount();
+                    totalWarnings += handler.getWarningCount();
                 }
 
             }
+
+            System.out.println("\r\nTotal Errors   : " + totalErrors);
+            System.out.println("Total Warnings : " + totalWarnings);
 
             if (inputFiles.size() > 0) {
                 if (!isNullOutput) {
