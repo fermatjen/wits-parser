@@ -333,8 +333,10 @@ public class WITS {
 
             }
 
-            System.out.println("\r\nTotal Errors   : " + totalErrors);
-            System.out.println("Total Warnings : " + totalWarnings);
+            if (isNullOutput) {
+                System.out.println("\r\nTotal Errors   : " + totalErrors);
+                System.out.println("Total Warnings : " + totalWarnings);
+            }
 
             if (inputFiles.size() > 0) {
                 if (!isNullOutput) {
