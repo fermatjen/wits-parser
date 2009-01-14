@@ -84,6 +84,12 @@ public class TestHandler {
 
     public void runTestCases() {
 
+        //Before running the cases, screen and literal
+        //texts should be hidden.
+
+        CodeHandler codeHandler = new CodeHandler(source);
+        source = codeHandler.getProcessedText();
+
         //run XML Validity Case
         XMLValidityCase xmlCase = new XMLValidityCase();
         xmlCase.initCase(source);
