@@ -216,7 +216,7 @@ public class WITS {
                 //Read WITS Global Properties
                 props.initProperties(configPath);
                 if (!isSilent) {
-                    System.out.println("   Reading WITS Config file...[" + configPath + "]");
+                    System.out.println("   Reading WITS Config file...[DONE]");
                 }
                 break;
             }
@@ -290,12 +290,12 @@ public class WITS {
                 //This could be an input file entry
                 if (ar[i].endsWith(".txt") || ar[i].endsWith(".TXT")) {
                     if (!isSilent) {
-                        System.out.println("   Adding...[" + temp.getAbsolutePath() + "]");
+                        System.out.println("   Adding...[" + temp.getName() + "]");
                     }
                     inputFiles.add(temp.getAbsolutePath());
                 } else {
                     if (!isSilent) {
-                        System.out.println("   Ignoring...[" + temp.getAbsolutePath() + "]");
+                        System.out.println("   Ignoring...[" + temp.getName() + "]");
                     }
                 }
             }
@@ -400,8 +400,24 @@ public class WITS {
                     }
 
                     fileWriter.writeChapterOutput(outputStream, cleanSGML);
+
+                    //run fatal cases for DocBook Output only.
+
+                    if (isDocBookOutput) {
+                        String header1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<chapter version=\"5.0\"\r\n    xmlns=\"http://docbook.org/ns/docbook\"\r\n    xmlns:xlink=\"http://www.w3.org/1999/xlink\"\r\n    xmlns:xi=\"http://www.w3.org/2001/XInclude\"\r\n    xmlns:svg=\"http://www.w3.org/2000/svg\"\r\n    xmlns:m=\"http://www.w3.org/1998/Math/MathML\"\r\n    xmlns:html=\"http://www.w3.org/1999/xhtml\"\r\n    xmlns:db=\"http://docbook.org/ns/docbook\">\r\n" + cleanSGML + "</chapter>";
+
+                        TestHandler handler = new TestHandler(inputFile, header1);
+                        handler.runTestCases(true);
+                        handler.displayResults();
+                        int fatalErrors = handler.getErrorCount();
+
+                        if (fatalErrors > 0) {
+                            System.out.println("   " + WITSProperties.WITS_FatalCaseErrorMessage);
+                        }
+                    }
+
                 } else {
-                    //run cases
+                    //run all cases
                     String header1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<chapter version=\"5.0\"\r\n    xmlns=\"http://docbook.org/ns/docbook\"\r\n    xmlns:xlink=\"http://www.w3.org/1999/xlink\"\r\n    xmlns:xi=\"http://www.w3.org/2001/XInclude\"\r\n    xmlns:svg=\"http://www.w3.org/2000/svg\"\r\n    xmlns:m=\"http://www.w3.org/1998/Math/MathML\"\r\n    xmlns:html=\"http://www.w3.org/1999/xhtml\"\r\n    xmlns:db=\"http://docbook.org/ns/docbook\">\r\n" + cleanSGML + "</chapter>";
 
                     TestHandler handler = new TestHandler(inputFile, header1);

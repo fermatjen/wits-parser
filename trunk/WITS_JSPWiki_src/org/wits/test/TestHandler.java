@@ -31,6 +31,7 @@ public class TestHandler {
     private String fileName = null;
     private int totalErrors = 0;
     private int totalWarnings = 0;
+    private boolean isFatalOnly = false;
 
     public TestHandler(String fileName, String source) {
         this.source = source;
@@ -74,12 +75,17 @@ public class TestHandler {
         }
     }
 
-    public int getErrorCount(){
+    public int getErrorCount() {
         return totalErrors;
     }
 
-    public int getWarningCount(){
+    public int getWarningCount() {
         return totalWarnings;
+    }
+
+    public void runTestCases(boolean isFatalOnly) {
+        this.isFatalOnly = isFatalOnly;
+        runTestCases();
     }
 
     public void runTestCases() {
@@ -97,26 +103,28 @@ public class TestHandler {
         buildStats("FATAL", result);
         resultMap.put("XML Validity [Fatal]", result);
 
-        //run Wiki LeftOver Case
-        WikiLeftOverCase wikiCase = new WikiLeftOverCase();
-        wikiCase.initCase(source);
-        result = wikiCase.runCase();
-        buildStats("WARNING", result);
-        resultMap.put("Wiki LeftOver [Warning]", result);
+        if (!isFatalOnly) {
+            //run Wiki LeftOver Case
+            WikiLeftOverCase wikiCase = new WikiLeftOverCase();
+            wikiCase.initCase(source);
+            result = wikiCase.runCase();
+            buildStats("WARNING", result);
+            resultMap.put("Wiki LeftOver [Warning]", result);
 
-        //run Wiki Default Content Case
-        DefaultContentCase dcontCase = new DefaultContentCase();
-        dcontCase.initCase(source);
-        result = dcontCase.runCase();
-        buildStats("WARNING", result);
-        resultMap.put("Default Content [Warning]", result);
+            //run Wiki Default Content Case
+            DefaultContentCase dcontCase = new DefaultContentCase();
+            dcontCase.initCase(source);
+            result = dcontCase.runCase();
+            buildStats("WARNING", result);
+            resultMap.put("Default Content [Warning]", result);
 
-        //run WITS Internal Data Case
-        WITSInternalDataCase widCase = new WITSInternalDataCase();
-        widCase.initCase(source);
-        result = widCase.runCase();
-        buildStats("WARNING", result);
-        resultMap.put("Internal Content [Warning]", result);
+            //run WITS Internal Data Case
+            WITSInternalDataCase widCase = new WITSInternalDataCase();
+            widCase.initCase(source);
+            result = widCase.runCase();
+            buildStats("WARNING", result);
+            resultMap.put("Internal Content [Warning]", result);
+        }
 
 
     }
@@ -124,7 +132,7 @@ public class TestHandler {
     public void displayResults() {
 
         Iterator keys = resultMap.keySet().iterator();
-        System.out.println("\r\nRunning WITS cases on " + fileName + "\r\n");
+        System.out.println("\r\n   Running WITS cases...[DONE]");
 
         int dLength = 35;
 
@@ -132,7 +140,7 @@ public class TestHandler {
             String key = (String) keys.next();
             int pLength = dLength - key.length();
 
-            System.out.print("   " + key);
+            System.out.print("     " + key);
 
             for (int i = 0; i < pLength; i++) {
                 System.out.print("-");
@@ -140,7 +148,8 @@ public class TestHandler {
 
             System.out.println(resultMap.get(key));
         }
-
-        evaluateCases();
+        if (!isFatalOnly) {
+            evaluateCases();
+        }
     }
 }
