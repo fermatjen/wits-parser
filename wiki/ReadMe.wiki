@@ -92,18 +92,35 @@ The following output shows the command line usage:
 
 {{{
 Usage:
+
+java -jar WITS.jar <inputFile> or <inputDir>
+
+Other Options:
+
 [--docbook]    - Enable DocBook Output.
 [--test]    - Do not write output to file.
 [--force]    - Force conversion for alien wiki formats.
 [--outputdir <path>]    - Provide the path to output Dir.
+[--compress]    - Creates a compressed archive of the output.
+[--silent]    - Do not print output.
 [--config <configFile>]    - Provide a configuration file.
 
-Example 1: Create DocBook Output.
+Example 1: Create SolBook Output.
+ java -jar WITS.jar input1.txt
+ java -jar WITS.jar inputdir
+ java -jar WITS.jar input1.txt input2.txt input3.txt
+ java -jar WITS.jar --config WITS.props input1.txt
+ java -jar WITS.jar --config WITS.props --outputdir /MyDir input1.txt
+ java -jar WITS.jar --config WITS.props --outputdir /MyDir --compress input1.txt
+
+Example 2: Create DocBook Output.
  java -jar WITS.jar --docbook input1.txt
- java -jar WITS.jar --docbook inputDir
+ java -jar WITS.jar --docbook inputdir
  java -jar WITS.jar --docbook input1.txt input2.txt input3.txt
  java -jar WITS.jar --docbook --config WITS.props input1.txt
  java -jar WITS.jar --docbook --config WITS.props --outputdir /MyDir input1.txt
+ java -jar WITS.jar --docbook --config WITS.props --outputdir /MyDir --compress input1.txt
+
 }}}
 
 =What the tool can do?=
