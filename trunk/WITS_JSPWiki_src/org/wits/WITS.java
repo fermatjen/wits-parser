@@ -45,6 +45,7 @@ public class WITS {
     private static String configPath = null;
     private static WITSProperties props = null;
     private static boolean outputDir = false;
+    private static boolean isSilent = false;
 
     private static String getOutputFile(String ext) {
         if (!singleInputFile) {
@@ -100,19 +101,32 @@ public class WITS {
 
         int arsLength = ar.length;
 
-        System.out.println(WITS_NLString + WITS_BrandName + " " + WITS_VersionName);
+        //Check for the silent option
+
+        for (int i = 0; i < arsLength; i++) {
+            if (ar[i].equalsIgnoreCase("--silent")) {
+                isSilent = true;
+                break;
+            }
+        }
+
+        if (!isSilent) {
+            System.out.println(WITS_NLString + WITS_BrandName + " " + WITS_VersionName);
+        }
 
         if (arsLength < 1) {
             printUsage();
         }
 
         if (arsLength == 1) {
-            if (ar[0].equalsIgnoreCase("--outputdir") || ar[0].equalsIgnoreCase("--solbook") || ar[0].equalsIgnoreCase("--docbook") || ar[0].equalsIgnoreCase("--test") || ar[0].equalsIgnoreCase("--force") || ar[0].equalsIgnoreCase("--config")) {
+            if (ar[0].equalsIgnoreCase("--silent") || ar[0].equalsIgnoreCase("--outputdir") || ar[0].equalsIgnoreCase("--solbook") || ar[0].equalsIgnoreCase("--docbook") || ar[0].equalsIgnoreCase("--test") || ar[0].equalsIgnoreCase("--force") || ar[0].equalsIgnoreCase("--config")) {
                 printUsage();
             }
         }
 
-        System.out.println("Applying Wiki Filters...");
+        if (!isSilent) {
+            System.out.println("Applying Wiki Filters...");
+        }
         WITSProcessor processor = null;
 
         double totalTimeTaken = 0;
@@ -124,7 +138,9 @@ public class WITS {
         for (int i = 0; i < arsLength; i++) {
             if (ar[i].equalsIgnoreCase("--test")) {
                 isNullOutput = true;
-                System.out.println("Output stream disabled for testing...");
+                if (!isSilent) {
+                    System.out.println("Output stream disabled for testing...");
+                }
                 isDocBookOutput = true;
                 break;
             }
@@ -134,7 +150,9 @@ public class WITS {
         for (int i = 0; i < arsLength; i++) {
             if (ar[i].equalsIgnoreCase("--force")) {
                 isForceParsing = true;
-                System.out.println("Force parsing...ON");
+                if (!isSilent) {
+                    System.out.println("Force parsing...ON");
+                }
                 break;
             }
         }
@@ -144,7 +162,9 @@ public class WITS {
         for (int i = 0; i < arsLength; i++) {
             if (ar[i].equalsIgnoreCase("--docbook")) {
                 isDocBookOutput = true;
-                System.out.println("DocBook Output...Enabled");
+                if (!isSilent) {
+                    System.out.println("DocBook Output...Enabled");
+                }
                 break;
             }
         }
@@ -152,7 +172,9 @@ public class WITS {
         for (int i = 0; i < arsLength; i++) {
             if (ar[i].equalsIgnoreCase("--solbook")) {
                 isDocBookOutput = false;
-                System.out.println("SolBook Output...Enabled");
+                if (!isSilent) {
+                    System.out.println("SolBook Output...Enabled");
+                }
                 break;
             }
         }
@@ -167,7 +189,9 @@ public class WITS {
                 configPath = ar[i + 1];
                 //Read WITS Global Properties
                 props.initProperties(configPath);
-                System.out.println("Reading WITS Config file: " + configPath);
+                if (!isSilent) {
+                    System.out.println("Reading WITS Config file: " + configPath);
+                }
                 break;
             }
         }
@@ -195,7 +219,7 @@ public class WITS {
 
         for (int i = 0; i < arsLength; i++) {
             //System.out.println("Checking ARG:"+ar[i]);
-            if (ar[i].equalsIgnoreCase("--solbook") || ar[i].equalsIgnoreCase("--docbook") || ar[i].equalsIgnoreCase("--force") || ar[i].equalsIgnoreCase("--test")) {
+            if (ar[i].equalsIgnoreCase("--silent") || ar[i].equalsIgnoreCase("--solbook") || ar[i].equalsIgnoreCase("--docbook") || ar[i].equalsIgnoreCase("--force") || ar[i].equalsIgnoreCase("--test")) {
                 continue;
             }
             if (ar[i].equalsIgnoreCase("--config")) {
@@ -209,13 +233,11 @@ public class WITS {
             aLength++;
         }
 
-        //System.out.println("Total Input Files:"+aLength);
-
         //Build the Input Files ArrayList
         for (int i = 0; i < arsLength; i++) {
             //check sub options
 
-            if (ar[i].equalsIgnoreCase("--solbook") || ar[i].equalsIgnoreCase("--docbook") || ar[i].equalsIgnoreCase("--test") || ar[i].equalsIgnoreCase("--force")) {
+            if (ar[i].equalsIgnoreCase("--silent") || ar[i].equalsIgnoreCase("--solbook") || ar[i].equalsIgnoreCase("--docbook") || ar[i].equalsIgnoreCase("--test") || ar[i].equalsIgnoreCase("--force")) {
                 continue;
             }
             if (ar[i].equalsIgnoreCase("--config")) {
@@ -234,15 +256,21 @@ public class WITS {
                 continue;
             }
             if (temp.isDirectory()) {
-                System.out.println("Reading Dir. Content: " + temp.getName());
+                if (!isSilent) {
+                    System.out.println("Reading Dir. Content: " + temp.getName());
+                }
                 buildDirContent(temp.getAbsolutePath());
             } else {
                 //This could be an input file entry
                 if (ar[i].endsWith(".txt") || ar[i].endsWith(".TXT")) {
-                    System.out.println("Adding " + temp.getAbsolutePath() + "");
+                    if (!isSilent) {
+                        System.out.println("Adding " + temp.getAbsolutePath() + "");
+                    }
                     inputFiles.add(temp.getAbsolutePath());
                 } else {
-                    System.out.println("Ignoring " + temp.getAbsolutePath() + "");
+                    if (!isSilent) {
+                        System.out.println("Ignoring " + temp.getAbsolutePath() + "");
+                    }
                 }
             }
         }
@@ -256,12 +284,16 @@ public class WITS {
         int totalWarnings = 0;
 
         try {
-            System.out.println("\r\nTo Parse: " + inputFiles.size() + " files.");
+            if (!isSilent) {
+                System.out.println("\r\nTo Parse: " + inputFiles.size() + " files.");
+            }
 
             for (int i = 0; i < inputFiles.size(); i++) {
                 inputFile = (String) inputFiles.get(i);
 
-                System.out.println("\r\nReading..." + inputFile);
+                if (!isSilent) {
+                    System.out.println("\r\nReading..." + inputFile);
+                }
 
                 processor = new WITSProcessor(isDocBookOutput, isForceParsing, isDebuggingOn, inputFile, outputFile, props);
                 processor.setWitsID(witsID);
@@ -274,7 +306,9 @@ public class WITS {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     writeParserErrorOutput(ex.getClass().getName() + "\r\n" + ex.getMessage());
-                    System.out.println(WITSProperties.WITS_ParseErrorMessage);
+                    if (!isSilent) {
+                        System.out.println(WITSProperties.WITS_ParseErrorMessage);
+                    }
                     System.exit(0);
                 }
                 long end = System.currentTimeMillis();
@@ -291,12 +325,16 @@ public class WITS {
 
 
                 if (!isDocBookOutput) {
-                    System.out.println("Building SolBook Content...");
+                    if (!isSilent) {
+                        System.out.println("Building SolBook Content...");
+                    }
                     SolChapterWriter cWriter = new SolChapterWriter(cleanSGML, props);
                     String chapterBody = cWriter.getPartialChapterBody();
                     bookContent = bookContent + chapterBody;
                 } else {
-                    System.out.println("Building DocBook Content...");
+                    if (!isSilent) {
+                        System.out.println("Building DocBook Content...");
+                    }
                     DocChapterWriter cWriter = new DocChapterWriter(cleanSGML, props);
                     String chapterBody = cWriter.getPartialChapterBody();
                     bookContent = bookContent + chapterBody;
@@ -305,7 +343,6 @@ public class WITS {
                 //get debugger context
                 WITSDebugger debugger = processor.getDebugger();
                 String debugString = debugger.getDebugString();
-                //System.out.println("DEBUG STRING:"+debugString);
 
 
                 if (!isNullOutput) {
@@ -319,6 +356,15 @@ public class WITS {
                     //write individual sgml files
                     WITSFileWriter fileWriter = new WITSFileWriter(isDocBookOutput, chapterPath, null, null, props);
                     //fileWriter.writeFile(cleanSGML, debugString);
+                    if (isDocBookOutput) {
+                        if (!isSilent) {
+                            System.out.println("Writing DocBook Chapter - " + chapterPath);
+                        }
+                    } else {
+                        if (!isSilent) {
+                            System.out.println("Writing SolBook Chapter - " + chapterPath);
+                        }
+                    }
                     fileWriter.writeChapterOutput(cleanSGML);
                 } else {
                     //run cases
@@ -334,8 +380,10 @@ public class WITS {
             }
 
             if (isNullOutput) {
-                System.out.println("\r\nTotal Errors   : " + totalErrors);
-                System.out.println("Total Warnings : " + totalWarnings);
+                if (!isSilent) {
+                    System.out.println("\r\nTotal Errors   : " + totalErrors);
+                    System.out.println("Total Warnings : " + totalWarnings);
+                }
             }
 
             if (inputFiles.size() > 0) {
@@ -350,24 +398,23 @@ public class WITS {
                     }
                     WITSFileWriter fileWriter = new WITSFileWriter(isDocBookOutput, null, bookPath, null, props);
 
+                    if (isDocBookOutput) {
+                        if (!isSilent) {
+                            System.out.println("Writing DocBook Book - " + bookPath);
+                        }
+                    }
+                    else{
+                        if(!isSilent){
+                            System.out.println("Writing SolBook Book - "+bookPath);
+                        }
+                    }
                     fileWriter.writeBookOutput(bookContent);
                 }
             }
 
-            //System.out.println("Completed in: " + totalTimeTaken + " secs.");
-            if (!isNullOutput) {
-                //System.out.println("Note - Some placeholder strings were added during conversion. Replace them with correct text before publishing.");
-            }
-
 
         } catch (Exception ex) {
-            //WITSDebugger debugger = processor.getDebugger();
-            //String debugString = debugger.getDebugString();
-            // File debugPath = new File(outputFile, "WITS.log");
-            //WITSFileWriter fileWriter = new WITSFileWriter(null, null, debugPath);
-            //fileWriter.writeErrorInfo(debugString, ex.toString());
-            //System.out.println("Error while parsing the wiki text.");
-            //System.out.println("Cause: " + ex.toString());
+
             writeParserErrorOutput(ex.getMessage());
             System.out.println(WITSProperties.WITS_ParseErrorMessage);
             ex.printStackTrace();
@@ -402,10 +449,14 @@ public class WITS {
             } else {
                 //already a file
                 if (children[i].endsWith(".txt") || children[i].endsWith(".TXT")) {
-                    System.out.println("Adding " + temp2.getAbsolutePath() + "");
+                    if (!isSilent) {
+                        System.out.println("Adding " + temp2.getAbsolutePath() + "");
+                    }
                     inputFiles.add(temp2.getAbsolutePath());
                 } else {
-                    System.out.println("Ignoring " + temp2.getAbsolutePath() + "");
+                    if (!isSilent) {
+                        System.out.println("Ignoring " + temp2.getAbsolutePath() + "");
+                    }
                 }
 
             }
