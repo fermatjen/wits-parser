@@ -104,13 +104,13 @@ public class WITSFileWriter {
                 fw.write(cWriter.getChapterBody());
                 fw.flush();
                 fw.close();
-                System.out.println("Writing SolBook Chapter: " + chapterPath.getAbsolutePath());
+                //System.out.println("Writing SolBook Chapter: " + chapterPath.getAbsolutePath());
             } else {
                 DocChapterWriter cWriter = new DocChapterWriter(cleanSGML, props);
                 fw.write(cWriter.getChapterBody());
                 fw.flush();
                 fw.close();
-                System.out.println("Writing DocBook Chapter: " + chapterPath.getAbsolutePath());
+                //System.out.println("Writing DocBook Chapter: " + chapterPath.getAbsolutePath());
             }
 
 
@@ -132,7 +132,7 @@ public class WITSFileWriter {
 
                 fw.write(bWriter.getPartialBookBody());
                 fw.flush();
-                System.out.println("Writing SolBook Book: " + bookPath.getAbsolutePath());
+                //System.out.println("Writing SolBook Book: " + bookPath.getAbsolutePath());
                 fw.close();
             }
             else{
@@ -140,7 +140,7 @@ public class WITSFileWriter {
 
                 fw.write(bWriter.getPartialBookBody());
                 fw.flush();
-                System.out.println("Writing DocBook Book: " + bookPath.getAbsolutePath());
+                //System.out.println("Writing DocBook Book: " + bookPath.getAbsolutePath());
                 fw.close();
             }
         } catch (IOException e) {
