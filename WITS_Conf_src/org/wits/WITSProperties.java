@@ -39,6 +39,8 @@ public class WITSProperties {
     public static String WITS_UsageString2 = "\r\nExample 1: Create SolBook Output.\r\n java -jar WITS.jar input1.txt\r\n java -jar WITS.jar inputdir\r\n java -jar WITS.jar input1.txt input2.txt input3.txt\r\n java -jar WITS.jar --config WITS.props input1.txt\r\n java -jar WITS.jar --config WITS.props --outputdir /MyDir input1.txt\r\n java -jar WITS.jar --config WITS.props --outputdir /MyDir --compress input1.txt\r\n\r\nExample 2: Create DocBook Output.\r\n java -jar WITS.jar --docbook input1.txt\r\n java -jar WITS.jar --docbook inputdir\r\n java -jar WITS.jar --docbook input1.txt input2.txt input3.txt\r\n java -jar WITS.jar --docbook --config WITS.props input1.txt\r\n java -jar WITS.jar --docbook --config WITS.props --outputdir /MyDir input1.txt\r\n java -jar WITS.jar --docbook --config WITS.props --outputdir /MyDir --compress input1.txt";
     public static String WITS_NLString = "\r\n";
     public static String WITS_ParseErrorMessage = "Parsing Error - Please check the error file witserror.txt. Send your source wiki file and witserror.txt file to: " + WITS_MailingList;
+    public static String WITS_FatalCaseErrorMessage = "One of more test cases failed on the output file. The output file may not be complete. Please check your source files.";
+
     public String WITS_BookTitle = "Enter your book title";
     public String WITS_ChapterTitle = "Enter your chapter title";
     public String WITS_ChapterHighlights = "Enter chapter highlights here";
