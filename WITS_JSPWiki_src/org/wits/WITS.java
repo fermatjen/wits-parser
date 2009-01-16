@@ -216,7 +216,7 @@ public class WITS {
                 //Read WITS Global Properties
                 props.initProperties(configPath);
                 if (!isSilent) {
-                    System.out.println("   Reading WITS Config file...[" + configPath+"]");
+                    System.out.println("   Reading WITS Config file...[" + configPath + "]");
                 }
                 break;
             }
@@ -278,12 +278,12 @@ public class WITS {
             //Handle dir here
             File temp = new File(ar[i]);
             if (!temp.exists()) {
-                System.out.println("   File not found...[" + temp.getName()+"]");
+                System.out.println("   File not found...[" + temp.getName() + "]");
                 continue;
             }
             if (temp.isDirectory()) {
                 if (!isSilent) {
-                    System.out.println("   Reading Dir...[" + temp.getName()+"]");
+                    System.out.println("   Reading Dir...[" + temp.getName() + "]");
                 }
                 buildDirContent(temp.getAbsolutePath());
             } else {
@@ -318,7 +318,7 @@ public class WITS {
                 inputFile = (String) inputFiles.get(i);
 
                 if (!isSilent) {
-                    System.out.println("\r\n   Reading...[" + inputFile+"]");
+                    System.out.println("\r\n   Reading...[" + inputFile + "]");
                 }
 
                 processor = new WITSProcessor(isDocBookOutput, isForceParsing, isDebuggingOn, inputFile, outputFile, props);
@@ -386,11 +386,11 @@ public class WITS {
                     if (!isCompressedOutput) {
                         if (isDocBookOutput) {
                             if (!isSilent) {
-                                System.out.println("   Writing DocBook Chapter...[" + chapterPath+"]");
+                                System.out.println("   Writing DocBook Chapter...[" + chapterPath + "]");
                             }
                         } else {
                             if (!isSilent) {
-                                System.out.println("   Writing SolBook Chapter...[" + chapterPath+"]");
+                                System.out.println("   Writing SolBook Chapter...[" + chapterPath + "]");
                             }
                         }
                     } else {
@@ -415,8 +415,8 @@ public class WITS {
 
             if (isNullOutput) {
                 if (!isSilent) {
-                    System.out.println("\r\n   Total Errors...[" + totalErrors+"]");
-                    System.out.println("   Total Warnings...[" + totalWarnings+"]");
+                    System.out.println("\r\n   Total Errors...[" + totalErrors + "]");
+                    System.out.println("   Total Warnings...[" + totalWarnings + "]");
                 }
             }
 
@@ -435,39 +435,39 @@ public class WITS {
                     if (!isCompressedOutput) {
                         if (isDocBookOutput) {
                             if (!isSilent) {
-                                System.out.println("   Writing DocBook Book...[" + bookPath+"]");
+                                System.out.println("   Writing DocBook Book...[" + bookPath + "]");
                             }
                         } else {
                             if (!isSilent) {
-                                System.out.println("   Writing SolBook Book...[" + bookPath+"]");
+                                System.out.println("   Writing SolBook Book...[" + bookPath + "]");
                             }
                         }
-                    }
-                    else{
+                    } else {
                         if (!isSilent) {
                             System.out.println("   Writing book to stream...[WITS.zip]");
                         }
                     }
                     fileWriter.writeBookOutput(outputStream, bookContent);
                 }
+
+                //Close the output stream
+                if (outputStream != null) {
+                    File bookPath = null;
+
+                    if (!isDocBookOutput) {
+                        bookPath = new File(outputFile, getOutputFile("book"));
+                    } else {
+                        bookPath = new File(outputFile, getOutputFile("book.xml"));
+                    }
+
+                    if (bookPath.exists()) {
+                        bookPath.delete();
+                    }
+                    outputStream.finish();
+                    outputStream.close();
+                }
             }
 
-            //Close the output stream
-            if (outputStream != null) {
-                File bookPath = null;
-
-                if (!isDocBookOutput) {
-                    bookPath = new File(outputFile, getOutputFile("book"));
-                } else {
-                    bookPath = new File(outputFile, getOutputFile("book.xml"));
-                }
-
-                if (bookPath.exists()) {
-                    bookPath.delete();
-                }
-                outputStream.finish();
-                outputStream.close();
-            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
