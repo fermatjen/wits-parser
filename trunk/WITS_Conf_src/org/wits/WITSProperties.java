@@ -15,7 +15,6 @@
  * input used in their production; they are not affected by this license.
  *
  */
-
 package org.wits;
 
 import java.io.BufferedReader;
@@ -36,8 +35,8 @@ public class WITSProperties {
     public static String WITS_VersionName = "V0.7.3_SVN";
     public static String WITS_AllienBrandMessage = "This is WITS - Confluence Parser. Your input file[s] may have alien wiki content. Use the correct WITS Parser or use the --force option.";
     public static String WITS_MailingList = "fermatjen@yahoo.com";
-    public static String WITS_UsageString1 = "\r\njava -jar WITS.jar <inputFile> or <inputDir>\r\n\r\nOther Options:\r\n\r\n[--docbook]    - Enable DocBook Output.\r\n[--test]    - Do not write output to file.\r\n[--force]    - Force conversion for alien wiki formats.\r\n[--outputdir <path>]    - Provide the path to output Dir.\r\n[--silent]    - Do not print output.\r\n[--config <configFile>]    - Provide a configuration file.\r\n";
-    public static String WITS_UsageString2 = "\r\nExample 1: Create SolBook Output.\r\n java -jar WITS.jar input1.txt\r\n java -jar WITS.jar inputdir\r\n java -jar WITS.jar input1.txt input2.txt input3.txt\r\n java -jar WITS.jar --config WITS.props input1.txt\r\n java -jar WITS.jar --config WITS.props --outputdir /MyDir input1.txt\r\n\r\nExample 2: Create DocBook Output.\r\n java -jar WITS.jar --docbook input1.txt\r\n java -jar WITS.jar --docbook inputdir\r\n java -jar WITS.jar --docbook input1.txt input2.txt input3.txt\r\n java -jar WITS.jar --docbook --config WITS.props input1.txt\r\n java -jar WITS.jar --docbook --config WITS.props --outputdir /MyDir input1.txt";
+    public static String WITS_UsageString1 = "\r\njava -jar WITS.jar <inputFile> or <inputDir>\r\n\r\nOther Options:\r\n\r\n[--docbook]    - Enable DocBook Output.\r\n[--test]    - Do not write output to file.\r\n[--force]    - Force conversion for alien wiki formats.\r\n[--outputdir <path>]    - Provide the path to output Dir.\r\n[--compress]    - Creates a compressed archive of the output.\r\n[--silent]    - Do not print output.\r\n[--config <configFile>]    - Provide a configuration file.\r\n";
+    public static String WITS_UsageString2 = "\r\nExample 1: Create SolBook Output.\r\n java -jar WITS.jar input1.txt\r\n java -jar WITS.jar inputdir\r\n java -jar WITS.jar input1.txt input2.txt input3.txt\r\n java -jar WITS.jar --config WITS.props input1.txt\r\n java -jar WITS.jar --config WITS.props --outputdir /MyDir input1.txt\r\n java -jar WITS.jar --config WITS.props --outputdir /MyDir --compress input1.txt\r\n\r\nExample 2: Create DocBook Output.\r\n java -jar WITS.jar --docbook input1.txt\r\n java -jar WITS.jar --docbook inputdir\r\n java -jar WITS.jar --docbook input1.txt input2.txt input3.txt\r\n java -jar WITS.jar --docbook --config WITS.props input1.txt\r\n java -jar WITS.jar --docbook --config WITS.props --outputdir /MyDir input1.txt\r\n java -jar WITS.jar --docbook --config WITS.props --outputdir /MyDir --compress input1.txt";
     public static String WITS_NLString = "\r\n";
     public static String WITS_ParseErrorMessage = "Parsing Error - Please check the error file witserror.txt. Send your source wiki file and witserror.txt file to: " + WITS_MailingList;
     public String WITS_BookTitle = "Enter your book title";
@@ -76,7 +75,7 @@ public class WITSProperties {
             System.exit(0);
         }
         try {
-            HashMap <String,String> witsKeys  = new HashMap <String,String> ();
+            HashMap<String, String> witsKeys = new HashMap<String, String>();
 
             while ((str = in.readLine()) != null) {
                 if (str.startsWith("WITS_") && str.indexOf("=") != -1) {
