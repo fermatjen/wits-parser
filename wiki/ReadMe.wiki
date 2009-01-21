@@ -9,6 +9,10 @@ WITS is a java tool and is available as an executable jar file.
 
 For building the WITS parser from source, you need to have ANT and Java SE SDK installed in your system. The following instructions shows you how you can get the source from the SVN repository and how you can build it yourself.
 
+=WITS Binary=
+ # [http://wits-parser.googlecode.com/svn/trunk/bin/Confluence/WITS.jar]
+ # [http://wits-parser.googlecode.com/svn/trunk/bin/JSPWiki/WITS.jar]
+
 ==Get the Source==
 
  # {{{svn checkout http://wits-parser.googlecode.com/svn/trunk/ wits-parser-read-only}}}
