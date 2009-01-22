@@ -13,6 +13,14 @@ For building the WITS parser from source, you need to have ANT and Java SE SDK i
  # [http://wits-parser.googlecode.com/svn/trunk/bin/Confluence/WITS.jar]
  # [http://wits-parser.googlecode.com/svn/trunk/bin/JSPWiki/WITS.jar]
 
+*Note* The binaries are compiled with Java 1.6 compiler. If you have a Java runtime less than 1.6, you may get the following error:
+
+{{{
+Exception in thread "main" java.lang.UnsupportedClassVersionError: Bad version number in .class file
+}}}
+
+So you need to have a Java runtime > 1.6 to execute the jar file.
+
 ==Get the Source==
 
  # {{{svn checkout http://wits-parser.googlecode.com/svn/trunk/ wits-parser-read-only}}}
