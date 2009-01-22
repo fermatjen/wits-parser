@@ -422,7 +422,7 @@ public class ListHandler {
 
         listItem = handler.replace(listItem, "<para></para>", "");
 
-        listItem = listItem + "</para>";
+        
 
         return listItem;
     }
