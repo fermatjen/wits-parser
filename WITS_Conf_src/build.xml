@@ -3,7 +3,8 @@
   <property name="src.home" value="."/>
 
   <target name="compile">
-     <javac srcdir="${src.home}" />
+     <javac srcdir="${src.home}" debug="true" debuglevel="lines,vars,source">
+     </javac>
   </target>
 
   <target name="jar" depends="compile">

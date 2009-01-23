@@ -126,8 +126,12 @@ public class LinkParser implements WITSParser{
                 String linkLabel = null;
                 String linkRef = null;
 
-                // System.out.println("LINKTEXT:"+linkText);
+                //System.out.println("LINKTEXT:"+linkText);
 
+                //handle special case where the linkText ends with |
+                if(linkText.endsWith("|")){
+                    linkText = linkText + linkText.substring(0, linkText.length()-1);
+                }
 
 
                 if (linkText.indexOf("|") != -1) {

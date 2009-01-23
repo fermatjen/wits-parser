@@ -15,7 +15,6 @@
  * input used in their production; they are not affected by this license.
  *
  */
-
 package org.wits.reader;
 
 import java.io.BufferedReader;
@@ -34,6 +33,7 @@ public class WITSFileReader {
     private String _f = null;
     private boolean inTable = false;
     private boolean orphanedTable = false;
+
     /**
      *
      * @param _f
@@ -158,8 +158,8 @@ public class WITSFileReader {
         if (str.startsWith("|") && str.endsWith("|") && !inTable) {
             inTable = true;
             orphanedTable = true;
-            //System.out.println("Breaking at: " + str);
-            //body += "<LB>\r\n";
+        //System.out.println("Breaking at: " + str);
+        //body += "<LB>\r\n";
         }
 
         return body;
@@ -182,35 +182,46 @@ public class WITSFileReader {
             boolean orphanedTable = true;
 
             while ((str = in.readLine()) != null) {
-                                
+
                 //simple fix to a bug that causes
                 //docbook to fail when notes and screens are inline and not block
                 //but do not touch the lists.                
-                if(!str.trim().startsWith("*") && !str.trim().startsWith("#")){
+                if (!str.trim().startsWith("*") && !str.trim().startsWith("#")) {
                     str = replace(str, "{{{", "<LB>\r\n{{{", 0);
                 }
-                                //check escaped []
+                //check escaped []
                 if (str.indexOf("\\[") != -1) {
                     str = replace(str, "\\[", "(", 0);
                 }
                 if (str.indexOf("\\]") != -1) {
                     str = replace(str, "\\]", ")", 0);
                 }
-                
+                if (str.indexOf("[[{") != -1) {
+                    str = replace(str, "[[{", "[{", 0);
+                }
+                if (str.indexOf("{{[[") != -1) {
+                    str = replace(str, "{{[[", "{{[", 0);
+                }
+
                 //Maybe HR. Ignore this line
                 if (str.trim().equals("----")) {
                     continue;
                 }
-                
-                 if (str.indexOf("*+[") != -1 && str.indexOf("]+*") != -1) {
+
+                //force LBs before markups
+                if (str.startsWith("!")) {
+                    body += "<LB>\r\n";
+                }
+
+                if (str.indexOf("*+[") != -1 && str.indexOf("]+*") != -1) {
                     str = replace(str, "*+[", "[", 0);
                     str = replace(str, "]+*", "]", 0);
                 }
-                
+
                 if (str.toLowerCase().indexOf("table of content") != -1) {
                     continue;
                 }
-                 //no emphasizing links
+                //no emphasizing links
                 if (str.indexOf("''[") != -1 && str.indexOf("]''") != -1) {
                     str = replace(str, "''[", "[", 0);
                     str = replace(str, "]''", "]", 0);
@@ -219,7 +230,7 @@ public class WITSFileReader {
                     str = replace(str, "__[", "[", 0);
                     str = replace(str, "]__", "]", 0);
                 }
-                
+
                 //handle empty cells
                 if (str.indexOf("| |") != -1) {
                     str = replace(str, "| |", "|-|", 0);
@@ -228,11 +239,11 @@ public class WITSFileReader {
                     str = replace(str, "|&nbsp;|", "|-|", 0);
                 }
                 //handle case {{[ldapmodify]}}
-                if (str.indexOf("{{[") != -1 && str.indexOf("]}}") != -1) {
-                    str = replace(str, "{{[", "{{", 0);
-                    str = replace(str, "]}}", "}}", 0);
-                }
-                
+                //if (str.indexOf("{{[") != -1 && str.indexOf("]}}") != -1) {
+                    //str = replace(str, "{{[", "{{", 0);
+                    //str = replace(str, "]}}", "}}", 0);
+                //}
+
                 //force LBs before markups
                 if (str.trim().startsWith("||") || str.trim().startsWith("!")) {
                     body += "<LB>\r\n";
@@ -240,6 +251,18 @@ public class WITSFileReader {
 
                 str = str.trim();
                 body = LBCheck(body, str);
+
+                //Handle special table formats like
+                //||col1|col2                
+                str = replace(str,"||","$ROWM",0);
+                str = replace(str,"|","$COLM",0);
+
+                if (str.startsWith("$ROWM") && str.indexOf("$COLM") != -1) {
+                    str = replace(str, "$ROWM", "$COLM", 0);
+                }
+
+                str = replace(str,"$ROWM","||",0);
+                str = replace(str,"$COLM","|",0);
 
                 if (str.startsWith("||") && str.endsWith("||")) {
                     inTable = true;
@@ -268,7 +291,7 @@ public class WITSFileReader {
                         body += "|| ";
                     }
                     //System.out.println("--------------------------"+body);
-                    
+
                     body += "<LB>\r\n";
                 }
 
