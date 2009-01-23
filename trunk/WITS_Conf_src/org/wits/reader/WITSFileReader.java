@@ -15,7 +15,6 @@
  * input used in their production; they are not affected by this license.
  *
  */
-
 package org.wits.reader;
 
 import java.io.BufferedReader;
@@ -338,6 +337,17 @@ public class WITSFileReader {
 
 
                 //str = AIBreakLine(str);
+                //Handle special table formats like
+                //||col1|col2
+                str = replace(str,"||","$ROWM",0);
+                str = replace(str,"|","$COLM",0);
+
+                if (str.startsWith("$ROWM") && str.indexOf("$COLM") != -1) {
+                    str = replace(str, "$ROWM", "$COLM", 0);
+                }
+
+                str = replace(str,"$ROWM","||",0);
+                str = replace(str,"$COLM","|",0);
 
                 body = LBCheck(body, str);
 
