@@ -181,8 +181,8 @@ public class WITSFileReader {
             boolean inTable = false;
             boolean orphanedTable = true;
 
-            while ((str = in.readLine().trim()) != null) {
-
+            while ((str = in.readLine()) != null) {
+                str = str.trim();
                 //simple fix to a bug that causes
                 //docbook to fail when notes and screens are inline and not block
                 //but do not touch the lists.                
