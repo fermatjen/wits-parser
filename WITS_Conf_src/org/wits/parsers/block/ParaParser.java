@@ -75,6 +75,23 @@ public class ParaParser implements WITSParser{
             //System.out.println("L_LOC:"+l_loc+" R_LOC:"+r_loc);
             String paraCandidate = uncleanSGML.substring(l_loc + 6, r_loc);
 
+            //allow special cases here the line ends with <screen>
+            //System.out.println("PC:"+paraCandidate);
+            if (paraCandidate.endsWith("</noparse>") && paraCandidate.indexOf("<noparse>") != -1) {
+                int npIndex = paraCandidate.indexOf("<noparse>");
+
+                String correctedParaCandidate = paraCandidate.substring(0, npIndex);
+
+                _handle.append(uncleanSGML.substring(offset, l_loc + 4));
+                debugger.showDebugMessage("ParaIC", l_loc, "Adding para tags.");
+                _handle.append("<para>");
+                _handle.append(correctedParaCandidate);
+                _handle.append("</para>");
+                _handle.append(paraCandidate.substring(npIndex, paraCandidate.length()));
+                offset = r_loc;
+                continue;
+            }
+
             if (paraCandidate.indexOf("caution>") != -1 || paraCandidate.indexOf("note>") != -1  || paraCandidate.indexOf("tip>") != -1 || paraCandidate.indexOf("<LB>") != -1 || paraCandidate.indexOf("noparse>") != -1 || paraCandidate.trim().equals("") || paraCandidate.indexOf("row>") != -1 || paraCandidate.indexOf("entry>") != -1 || paraCandidate.indexOf("listitem>") != -1 || paraCandidate.indexOf("<sect") != -1 || paraCandidate.indexOf("</sect") != -1 || paraCandidate.indexOf("<informaltable") != -1 || paraCandidate.indexOf("</informaltable") != -1 || paraCandidate.indexOf("itemizedlist>") != -1 || paraCandidate.indexOf("orderedlist>") != -1 || paraCandidate.indexOf("<LB>") != -1 || paraCandidate.startsWith("|") || paraCandidate.endsWith("|") || paraCandidate.indexOf("blockquote>") != -1) {
                 //don't mess with the block
                 //System.out.println("-----------------PC:" + paraCandidate);
