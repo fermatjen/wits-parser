@@ -181,12 +181,12 @@ public class WITSFileReader {
             boolean inTable = false;
             boolean orphanedTable = true;
 
-            while ((str = in.readLine()) != null) {
+            while ((str = in.readLine().trim()) != null) {
 
                 //simple fix to a bug that causes
                 //docbook to fail when notes and screens are inline and not block
                 //but do not touch the lists.                
-                if (!str.trim().startsWith("*") && !str.trim().startsWith("#")) {
+                if (!str.startsWith("*") && !str.trim().startsWith("#")) {
                     str = replace(str, "{{{", "<LB>\r\n{{{", 0);
                 }
                 //check escaped []
@@ -201,6 +201,19 @@ public class WITSFileReader {
                 }
                 if (str.indexOf("{{[[") != -1) {
                     str = replace(str, "{{[[", "{{[", 0);
+                }
+
+                //check for content between %% and %%
+                if (str.indexOf("%%") != -1) {
+                    if(str.equals("%%")){
+                        continue;
+                    }
+                    if(str.startsWith("%%") && str.endsWith(")") && str.indexOf("(") != -1){
+                        continue;
+                    }
+                    if(str.startsWith("%%") && str.endsWith("%%")){
+                        continue;
+                    }
                 }
 
                 //Maybe HR. Ignore this line
