@@ -216,6 +216,18 @@ public class WITSFileReader {
                     }
                 }
 
+                //Handle table rows with extra delimiters
+                if (str.startsWith("||") && str.endsWith("||")) {
+                    //could be confluence like table row. Strip the last
+                    //|| to get the correct cell count.
+                    str = str.substring(0, str.length()-2);                    
+                }
+                else if (str.startsWith("|") && str.endsWith("|")) {
+                    //could be confluence like table row. Strip the last
+                    //| to get the correct cell count.
+                    str = str.substring(0, str.length()-1);
+                }
+
                 //Maybe HR. Ignore this line
                 if (str.trim().equals("----")) {
                     continue;

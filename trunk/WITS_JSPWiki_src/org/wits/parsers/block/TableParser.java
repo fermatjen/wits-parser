@@ -249,7 +249,7 @@ public class TableParser implements WITSParser{
 
         cleanedBodyBlock.append("<tbody><row>\r\n");
 
-        int cellCount = 0;
+        int cellCount = 1;
 
         while (true) {
 
@@ -261,6 +261,7 @@ public class TableParser implements WITSParser{
             }
 
             String colName = bodyBlock.substring(hl_loc + 1, hr_loc);
+            //System.out.println("CCOUNT:"+cellCount+" COLS:"+cols);
 
             //Increment cellcount;
             cellCount++;
