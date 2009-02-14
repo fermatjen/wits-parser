@@ -400,9 +400,9 @@ public class HeadingParser implements WITSParser{
             _handle.append(uncleanSGML.substring(offset, l_loc));
             
             if (!hideID) {
-                _handle.append(sectPrefix + " id=\"" + sectID + "\"><title>" + sectTitle + "</title>");
+                _handle.append(sectPrefix + " id=\"" + sectID + "\"><title>" + sectTitle.trim() + "</title>");
             } else {
-                _handle.append(sectPrefix + "><title>" + sectTitle + "</title>");
+                _handle.append(sectPrefix + "><title>" + sectTitle.trim() + "</title>");
             }
 
             offset = r_loc;
