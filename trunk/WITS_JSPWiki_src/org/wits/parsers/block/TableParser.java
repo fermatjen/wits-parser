@@ -15,7 +15,6 @@
  * input used in their production; they are not affected by this license.
  *
  */
-
 package org.wits.parsers.block;
 
 import org.wits.WITSProperties;
@@ -27,7 +26,7 @@ import org.wits.patterns.StringHandler;
  *
  * @author FJ
  */
-public class TableParser implements WITSParser{
+public class TableParser implements WITSParser {
 
     private String uncleanSGML = null;
     private boolean isDocBookOutput = false;
@@ -263,13 +262,11 @@ public class TableParser implements WITSParser{
             String colName = bodyBlock.substring(hl_loc + 1, hr_loc);
             //System.out.println("CCOUNT:"+cellCount+" COLS:"+cols);
 
-            //Increment cellcount;
-            cellCount++;
+
             boolean rowEndReached = false;
 
-            if (cellCount > cols) {
+            if (cellCount == cols) {
                 rowEndReached = true;
-                cellCount = 0;
             }
             //System.out.println("\r\n\r\n"+colName);
             //close the record
@@ -284,11 +281,14 @@ public class TableParser implements WITSParser{
                 //System.out.println("COLNAME:" + colName);
                 cleanedBodyBlock.append("</para></entry>");
                 cleanedBodyBlock.append("</row><row>");
+                cellCount = 1;
             } else {
                 cleanedBodyBlock.append("<entry><para>");
                 cleanedBodyBlock.append(colName);
                 //System.out.println("COLNAME:" + colName);
                 cleanedBodyBlock.append("</para></entry>");
+                //Increment cellcount;
+                cellCount++;
             }
             offset = hr_loc;
         }
