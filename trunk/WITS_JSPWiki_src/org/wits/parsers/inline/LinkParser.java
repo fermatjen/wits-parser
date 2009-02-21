@@ -182,7 +182,7 @@ public class LinkParser implements WITSParser{
                 StringHandler handle = new StringHandler();
                 handle.setDebugger(debugger);
                 linkRef=linkRef.trim();
-                linkRef = handle.replace(linkRef, " ", "+");
+                linkRef = handle.replace(linkRef, " ", "");
 
                 if (!isDocBookOutput) {
                     _handle.append(" <ulink url=\"" + linkRef + "\" type=\"text\">");
