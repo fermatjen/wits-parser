@@ -112,8 +112,51 @@ public class PostProcessor {
                         
         uncleanSGML = handler.replace(uncleanSGML, "<LB>", "", 0);
         uncleanSGML = handler.replace(uncleanSGML, "%%%%%", "#", 0);
+
+        //remove screen texts from title
+        uncleanSGML = removeScreensFromTitle(uncleanSGML);
         
         return uncleanSGML;
+    }
+
+    private String removeScreensFromTitle(String textBlock){
+        //Check if titles have screen elements.
+
+        int offset = 0;
+        StringBuilder _handle = new StringBuilder();
+
+        while (true) {
+            int l_loc = textBlock.indexOf("<title>", offset);
+            int r_loc = textBlock.indexOf("</title>", l_loc);
+
+            if (l_loc == -1 || r_loc == -1) {
+                _handle.append(textBlock.substring(offset, textBlock.length()));
+                break;
+            }
+
+            String titleCandidate = textBlock.substring(l_loc + 7, r_loc);
+
+            if (titleCandidate.indexOf("<screen>") != -1 && titleCandidate.indexOf("</screen>") != -1) {
+               int l1 = textBlock.indexOf("<screen>",l_loc);
+               int l2 = textBlock.indexOf("</screen>",l1);
+               String screenText = textBlock.substring(l1, l2+9);
+               String titleText = textBlock.substring(l_loc+7,l1);
+               _handle.append(textBlock.substring(offset, l_loc));
+               _handle.append("<title>");
+               _handle.append(titleText);
+               _handle.append("</title>");
+               _handle.append(screenText);
+               offset = r_loc+8;
+
+            } else {
+                _handle.append(textBlock.substring(offset, r_loc));
+                offset = r_loc;
+            }
+        }
+        textBlock = _handle.toString();
+
+        return textBlock;
+
     }
 
     private String handleInitialSectionDangler(String textBlock) {
