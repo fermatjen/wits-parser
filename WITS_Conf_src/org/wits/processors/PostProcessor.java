@@ -15,7 +15,6 @@
  * input used in their production; they are not affected by this license.
  *
  */
-
 package org.wits.processors;
 
 import org.wits.WITSProperties;
@@ -61,7 +60,7 @@ public class PostProcessor {
         StringHandler handler = new StringHandler();
         handler.setDebugger(debugger);
 
-        String danglerID = "dangler"+System.currentTimeMillis();
+        String danglerID = "dangler" + System.currentTimeMillis();
 
         debugger.showDebugMessage("PostProcessor", uncleanSGML.length(), "Removing WITS placeholders.");
         //Remove the intentional LBs
@@ -78,14 +77,14 @@ public class PostProcessor {
 
         uncleanSGML = handler.replace(uncleanSGML, "<FLB>", "", 0);
         uncleanSGML = handler.replace(uncleanSGML, "%%%%%", "#", 0);
-        
+
         //check if there is atleast 1 section
 
         if (uncleanSGML.indexOf("</sect1>") == -1) {
             StringBuilder _handle2 = new StringBuilder(uncleanSGML);
 
             if (!hideID) {
-                _handle2.insert(0, "<sect1 id=\""+danglerID+"\"><title>" + props.WITS_DanglerSectionTitle + "</title>");
+                _handle2.insert(0, "<sect1 id=\"" + danglerID + "\"><title>" + props.WITS_DanglerSectionTitle + "</title>");
             } else {
                 _handle2.insert(0, "<sect1><title>" + props.WITS_DanglerSectionTitle + "</title>");
             }
@@ -105,21 +104,63 @@ public class PostProcessor {
         uncleanSGML = handler.replace(uncleanSGML, "</para>.\r\n", "</para>\r\n", 0);
         uncleanSGML = handler.replace(uncleanSGML, "</literal>.\r\n", "</literal>\r\n", 0);
         uncleanSGML = handler.replace(uncleanSGML, "</ulink>.\r\n", "</ulink>\r\n", 0);
-        
 
-        
-       //replace special chars
+
+
+        //replace special chars
         uncleanSGML = handler.replace(uncleanSGML, "&amp;#035;", "#", 0);
         uncleanSGML = handler.replace(uncleanSGML, "&amp;#095;", "_", 0);
         uncleanSGML = handler.replace(uncleanSGML, "&amp;#092;", "\\", 0);
-        uncleanSGML = handler.replace(uncleanSGML, "&amp;#042;", "*", 0);        
+        uncleanSGML = handler.replace(uncleanSGML, "&amp;#042;", "*", 0);
         uncleanSGML = handler.replace(uncleanSGML, "&amp;#8212;", "-", 0);
-       
+
         uncleanSGML = handler.replace(uncleanSGML, "<LB>", "", 0);
         uncleanSGML = handler.replace(uncleanSGML, "{excerpt}", "", 0);
 
-                
+        //remove screen texts from title
+        uncleanSGML = removeScreensFromTitle(uncleanSGML);
+
         return uncleanSGML;
+    }
+
+    private String removeScreensFromTitle(String textBlock) {
+        //Check if titles have screen elements.
+
+        int offset = 0;
+        StringBuilder _handle = new StringBuilder();
+
+        while (true) {
+            int l_loc = textBlock.indexOf("<title>", offset);
+            int r_loc = textBlock.indexOf("</title>", l_loc);
+
+            if (l_loc == -1 || r_loc == -1) {
+                _handle.append(textBlock.substring(offset, textBlock.length()));
+                break;
+            }
+
+            String titleCandidate = textBlock.substring(l_loc + 7, r_loc);
+
+            if (titleCandidate.indexOf("<screen>") != -1 && titleCandidate.indexOf("</screen>") != -1) {
+                int l1 = textBlock.indexOf("<screen>", l_loc);
+                int l2 = textBlock.indexOf("</screen>", l1);
+                String screenText = textBlock.substring(l1, l2 + 9);
+                String titleText = textBlock.substring(l_loc + 7, l1);
+                _handle.append(textBlock.substring(offset, l_loc));
+                _handle.append("<title>");
+                _handle.append(titleText);
+                _handle.append("</title>");
+                _handle.append(screenText);
+                offset = r_loc + 8;
+
+            } else {
+                _handle.append(textBlock.substring(offset, r_loc));
+                offset = r_loc;
+            }
+        }
+        textBlock = _handle.toString();
+
+        return textBlock;
+
     }
 
     private String handleInitialSectionDangler(String textBlock) {
@@ -127,7 +168,7 @@ public class PostProcessor {
         int offset = 0;
         StringBuilder _handle = new StringBuilder();
         //long time=Sy
-        String danglerID = "dangler"+System.currentTimeMillis();
+        String danglerID = "dangler" + System.currentTimeMillis();
 
         while (true) {
             int l_loc = textBlock.indexOf("<sect", offset);
@@ -149,11 +190,10 @@ public class PostProcessor {
             if (sectionCandidate.indexOf("sect2") != -1) {
                 //Add sect1 place holder
                 String danglerText = null;
-                
-                if(!hideID){
-                    danglerText = "<sect1 id=\""+danglerID+"\"><title>" + props.WITS_DanglerSectionTitle + "</title>\r\n<para>" + props.WITS_DanglerSectionSummary + "</para>\r\n";
-                }
-                else{
+
+                if (!hideID) {
+                    danglerText = "<sect1 id=\"" + danglerID + "\"><title>" + props.WITS_DanglerSectionTitle + "</title>\r\n<para>" + props.WITS_DanglerSectionSummary + "</para>\r\n";
+                } else {
                     danglerText = "<sect1><title>" + props.WITS_DanglerSectionTitle + "</title>\r\n<para>" + props.WITS_DanglerSectionSummary + "</para>\r\n";
                 }
                 _handle.append(danglerText);
@@ -163,11 +203,10 @@ public class PostProcessor {
             if (sectionCandidate.indexOf("sect3") != -1) {
                 //Add sect1 and sect2 place holder
                 String danglerText = null;
-                
-                if(!hideID){
-                    danglerText = "<sect1 id=\""+danglerID+"\"><title>" + props.WITS_DanglerSectionTitle + "</title>\r\n<para>" + props.WITS_DanglerSectionSummary + "</para>\r\n<sect2 id=\"dangler3\"><title>Enter section title</title><para>Insert section summary here.</para>\r\n";
-                }
-                else{
+
+                if (!hideID) {
+                    danglerText = "<sect1 id=\"" + danglerID + "\"><title>" + props.WITS_DanglerSectionTitle + "</title>\r\n<para>" + props.WITS_DanglerSectionSummary + "</para>\r\n<sect2 id=\"dangler3\"><title>Enter section title</title><para>Insert section summary here.</para>\r\n";
+                } else {
                     danglerText = "<sect1><title>" + props.WITS_DanglerSectionTitle + "</title>\r\n<para>" + props.WITS_DanglerSectionSummary + "</para>\r\n<sect2><title>Enter section title</title><para>Insert section summary here.</para>\r\n";
                 }
                 _handle.append(danglerText);
