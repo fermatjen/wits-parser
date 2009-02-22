@@ -1,7 +1,9 @@
 #labels Featured,Phase-Deploy
 =About WITS=
 
-WITS is a Wiki to Structured Markup converter that can convert wiki files of different markups (Confluence and JSPWiki) to a structured format like DocBook v5 XML. 
+WITS is a Wiki to Structured Markup converter that can convert wiki files of different markups (Confluence and JSPWiki) to a structured format like DocBook v5 XML. Unlike other XML/SGML encoders, WITS does not produce XML blocks through in-memory tree or DOM structures. WITS produces structured text blocks by passing the input wiki text through multiple pre-defined wiki interdeptors to achieve an almost perfect conversion. The trick lies in considering the wiki text blocks as a continuous string and then applying 'wiki filters' over the text to produce unclean XML. This happens as several passes (~40-50). At one point, the wiki text gets completely converted to XML. This is a strange technique but ensures WITS to be effective when handling complex wiki patterns. This is necessary because wiki text is considered the most unclean a structure. 
+
+Why is WITS faster? Pre-defined wiki patterns are applied directly on the optimized string buffer (containing the input blocks) to add and manipulate the string in such a way that the output is an unclean XML (mixture of wiki and XML tags). So at least theoretically there are some rare cases when the output produced by the WITS parser may not be a valid XML file. This is very rare and if you had that case, either you have a completely chaotic wiki or you have a completely chaotic wiki (!). 
 
 WITS is a java tool and is available as an executable jar file.
 
