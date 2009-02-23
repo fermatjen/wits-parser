@@ -59,7 +59,7 @@ public class WITSProcessor {
     private String inputText = null;
     private int witsID = 0;
     private WITSProperties props = null;
-    private boolean hideID = false;
+    private WITSInstance witsInstance = null;
 
     /**
      *
@@ -99,8 +99,8 @@ public class WITSProcessor {
      * @param inputFile
      * @param outputFile
      */
-    public WITSProcessor(boolean hideID, boolean isForceParsing, boolean isDebuggingOn, String inputFile, String outputFile, WITSProperties props) {
-        this.hideID = hideID;
+    public WITSProcessor(WITSInstance witsInstance, boolean isForceParsing, boolean isDebuggingOn, String inputFile, String outputFile, WITSProperties props) {
+        this.witsInstance = witsInstance;
         this.isForceParsing = isForceParsing;
         this.isDebuggingOn = isDebuggingOn;
         this.inputFile = inputFile;
@@ -197,7 +197,7 @@ public class WITSProcessor {
 
 
         //Fix sections      
-        HeadingParser headICParser = new HeadingParser(hideID, uncleanSGML,props);
+        HeadingParser headICParser = new HeadingParser(witsInstance, uncleanSGML,props);
         headICParser.setDebugger(debugger);
         headICParser.setID(witsID);
         uncleanSGML = headICParser.getProcessedText();
@@ -229,16 +229,16 @@ public class WITSProcessor {
         uncleanSGML = termICParser.getProcessedText();
 
         //Handle Inline elements                
-        EmphasisParser empICParser = new EmphasisParser(hideID, uncleanSGML);
+        EmphasisParser empICParser = new EmphasisParser(witsInstance, uncleanSGML);
         empICParser.setDebugger(debugger);
         uncleanSGML = empICParser.getProcessedText();
 
-        LinkParser linkICParser = new LinkParser(hideID,uncleanSGML,props);
+        LinkParser linkICParser = new LinkParser(witsInstance,uncleanSGML,props);
         linkICParser.setDebugger(debugger);
         uncleanSGML = linkICParser.getProcessedText();
 
         //Handle Block elements        
-        TableParser tableICParser = new TableParser(hideID, uncleanSGML,props);
+        TableParser tableICParser = new TableParser(witsInstance, uncleanSGML,props);
         tableICParser.setDebugger(debugger);
         uncleanSGML = tableICParser.getProcessedText();
 
@@ -261,7 +261,7 @@ public class WITSProcessor {
         uncleanSGML = overParser.getOvercastContent(uncleanSGML);
 
         //Call Post Processor       
-        PostProcessor postICParser = new PostProcessor(hideID, uncleanSGML,props);
+        PostProcessor postICParser = new PostProcessor(witsInstance, uncleanSGML,props);
         postICParser.setDebugger(debugger);
         uncleanSGML = postICParser.getProcessedText();
 

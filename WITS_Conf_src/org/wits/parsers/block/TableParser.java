@@ -18,6 +18,7 @@
 
 package org.wits.parsers.block;
 
+import org.wits.WITSInstance;
 import org.wits.debugger.WITSDebugger;
 import org.wits.parsers.WITSParser;
 import org.wits.patterns.StringHandler;
@@ -29,7 +30,7 @@ import org.wits.patterns.StringHandler;
 public class TableParser implements WITSParser{
 
     private String uncleanSGML = null;
-    private boolean isDocBookOutput = false;
+    private WITSInstance witsInstance = null;
     private WITSDebugger debugger = null;
 
     /**
@@ -44,8 +45,8 @@ public class TableParser implements WITSParser{
      *
      * @param uncleanSGML
      */
-    public TableParser(boolean isDocBookOutput, String uncleanSGML) {
-        this.isDocBookOutput = isDocBookOutput;
+    public TableParser(WITSInstance witsInstance, String uncleanSGML) {
+        this.witsInstance = witsInstance;
         this.uncleanSGML = uncleanSGML;
     //System.out.println("---TOTable:"+uncleanSGML);
     }
@@ -282,7 +283,7 @@ public class TableParser implements WITSParser{
         cleanedTableBlock.append("<tgroup cols=\"" + cols + "\" colsep=\"0\" rowsep = \"0\">\r\n");
         //cleanedTableBlock.append("<?PubTbl tgroup dispwid=\"600.00px\">\r\n");
         //Nasty hack for solbook
-        if (!isDocBookOutput) {
+        if (witsInstance.getOutputType().equals("solbook")) {
             for (int i = 0; i < cols; i++) {
                 cleanedTableBlock.append("<colspec colwidth=\"1.00*\">");
             }

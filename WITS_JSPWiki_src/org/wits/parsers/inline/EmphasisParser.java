@@ -18,6 +18,7 @@
 
 package org.wits.parsers.inline;
 
+import org.wits.WITSInstance;
 import org.wits.debugger.WITSDebugger;
 import org.wits.parsers.WITSParser;
 
@@ -29,7 +30,7 @@ public class EmphasisParser implements WITSParser{
 
     private String uncleanSGML = null;
     private WITSDebugger debugger = null;
-    private boolean isDocBookOutput = true;
+    private WITSInstance witsInstance = null;
 
     /**
      *
@@ -43,8 +44,8 @@ public class EmphasisParser implements WITSParser{
      *
      * @param uncleanSGML
      */
-    public EmphasisParser(boolean isDocBookOutput, String uncleanSGML) {
-        this.isDocBookOutput = isDocBookOutput;
+    public EmphasisParser(WITSInstance witsInstance, String uncleanSGML) {
+        this.witsInstance = witsInstance;
         this.uncleanSGML = uncleanSGML;
     }
 
@@ -134,9 +135,10 @@ public class EmphasisParser implements WITSParser{
                 _handle.append(uncleanSGML.substring(offset, l_loc));
 
                 if (targetString.indexOf("noparse>") == -1 && targetString.indexOf("noparsi>") == -1) {
-                    if (!isDocBookOutput) {
+                    if (witsInstance.getOutputType().equals("solbook")) {
                         _handle.append("<emphasis role=\"strong\">");
-                    } else {
+                    }
+                    if (witsInstance.getOutputType().equals("docbook")) {
                         _handle.append("<emphasis>");
                     }
                     _handle.append(targetString);

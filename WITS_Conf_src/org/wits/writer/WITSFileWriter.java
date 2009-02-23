@@ -24,6 +24,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.wits.WITSInstance;
 import org.wits.WITSProperties;
 import org.wits.writer.docbookwriter.DocBookWriter;
 import org.wits.writer.docbookwriter.DocChapterWriter;
@@ -37,7 +38,7 @@ public class WITSFileWriter {
     private File chapterPath = null;
     private File bookPath = null;
     private File debugPath = null;
-    private boolean isDocBookOutput = false;
+    private WITSInstance witsInstance = null;
     private WITSProperties props = null;
 
     /**
@@ -46,8 +47,8 @@ public class WITSFileWriter {
      * @param bookPath
      * @param debugPath
      */
-    public WITSFileWriter(boolean isDocBookOutput, File chapterPath, File bookPath, File debugPath, WITSProperties props) {
-        this.isDocBookOutput = isDocBookOutput;
+    public WITSFileWriter(WITSInstance witsInstance, File chapterPath, File bookPath, File debugPath, WITSProperties props) {
+        this.witsInstance = witsInstance;
         this.chapterPath = chapterPath;
         this.bookPath = bookPath;
         this.debugPath = debugPath;
@@ -105,7 +106,7 @@ public class WITSFileWriter {
         }
 
         if (isCompressedOutput) {
-            if (!isDocBookOutput) {
+            if (witsInstance.getOutputType().equals("solbook")) {
                 SolChapterWriter cWriter = new SolChapterWriter(cleanSGML, props);
 
                 ZipEntry entry = new ZipEntry(chapterPath.getName());
@@ -117,7 +118,8 @@ public class WITSFileWriter {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-            } else {
+            }
+            if (witsInstance.getOutputType().equals("docbook")) {
                 DocChapterWriter cWriter = new DocChapterWriter(cleanSGML, props);
 
                 ZipEntry entry = new ZipEntry(chapterPath.getName());
@@ -134,13 +136,14 @@ public class WITSFileWriter {
             try {
                 FileWriter fw = new FileWriter(chapterPath);
 
-                if (!isDocBookOutput) {
+                if (witsInstance.getOutputType().equals("solbook")) {
                     SolChapterWriter cWriter = new SolChapterWriter(cleanSGML, props);
                     fw.write(cWriter.getChapterBody());
                     fw.flush();
                     fw.close();
                 //System.out.println("Writing SolBook Chapter: " + chapterPath.getAbsolutePath());
-                } else {
+                }
+                if (witsInstance.getOutputType().equals("docbook")) {
                     DocChapterWriter cWriter = new DocChapterWriter(cleanSGML, props);
                     fw.write(cWriter.getChapterBody());
                     fw.flush();
@@ -150,7 +153,7 @@ public class WITSFileWriter {
 
 
             } catch (IOException e) {
-                System.out.println("Error while writing the SGML to: " + chapterPath + ". PLease check the path/permission.");
+                System.out.println("Error while writing to: " + chapterPath + ". PLease check the path/permission.");
             }
         }
     }
@@ -171,7 +174,7 @@ public class WITSFileWriter {
             FileWriter fw = new FileWriter(bookPath);
 
             if (isCompressedOutput) {
-                if (!isDocBookOutput) {
+                if (witsInstance.getOutputType().equals("solbook")) {
                     SolBookWriter cWriter = new SolBookWriter(cleanSGML, props);
                     ZipEntry entry = new ZipEntry(bookPath.getName());
 
@@ -182,7 +185,8 @@ public class WITSFileWriter {
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
-                } else {
+                }
+                if (witsInstance.getOutputType().equals("docbook")) {
                     DocBookWriter cWriter = new DocBookWriter(cleanSGML, props);
                     ZipEntry entry = new ZipEntry(bookPath.getName());
 
@@ -195,14 +199,15 @@ public class WITSFileWriter {
                     }
                 }
             } else {
-                if (!isDocBookOutput) {
+                if (witsInstance.getOutputType().equals("solbook")) {
                     SolBookWriter bWriter = new SolBookWriter(cleanSGML, props);
 
                     fw.write(bWriter.getPartialBookBody());
                     fw.flush();
                     //System.out.println("Writing SolBook Book: " + bookPath.getAbsolutePath());
                     fw.close();
-                } else {
+                }
+                if (witsInstance.getOutputType().equals("docbook")) {
                     DocBookWriter bWriter = new DocBookWriter(cleanSGML, props);
 
                     fw.write(bWriter.getPartialBookBody());
@@ -212,7 +217,7 @@ public class WITSFileWriter {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error while writing the SGML to: " + bookPath + ". PLease check the path/permission.");
+            System.out.println("Error while writing to: " + bookPath + ". PLease check the path/permission.");
         }
     }
 }
