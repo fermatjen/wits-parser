@@ -99,6 +99,8 @@ public class WITS {
 
         //Create a WITS Instance
         WITSInstance witsInstance = new WITSInstance();
+        //set the default type
+        witsInstance.setOutputType("solbook");
 
         String WITS_BrandName = WITSProperties.WITS_BrandName;
         String WITS_VersionName = WITSProperties.WITS_VersionName;
