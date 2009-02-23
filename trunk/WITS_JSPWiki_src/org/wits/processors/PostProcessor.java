@@ -18,6 +18,7 @@
 
 package org.wits.processors;
 
+import org.wits.WITSInstance;
 import org.wits.WITSProperties;
 import org.wits.debugger.WITSDebugger;
 import org.wits.patterns.StringHandler;
@@ -31,7 +32,7 @@ public class PostProcessor {
     private String uncleanSGML = null;
     private WITSDebugger debugger = null;
     private WITSProperties props = null;
-    private boolean hideID = false;
+    private WITSInstance witsInstance = null;
 
     /**
      *
@@ -45,8 +46,8 @@ public class PostProcessor {
      *
      * @param uncleanSGML
      */
-    public PostProcessor(boolean hideID, String uncleanSGML, WITSProperties props) {
-        this.hideID = hideID;
+    public PostProcessor(WITSInstance witsInstance, String uncleanSGML, WITSProperties props) {
+        this.witsInstance = witsInstance;
         this.uncleanSGML = uncleanSGML;
         this.props = props;
     }
@@ -81,9 +82,10 @@ public class PostProcessor {
 
         if (uncleanSGML.indexOf("</sect1>") == -1) {
             StringBuilder _handle2 = new StringBuilder(uncleanSGML);
-            if (!hideID) {
+            if (witsInstance.getOutputType().equals("solbook")) {
                 _handle2.insert(0, "<sect1 id=\""+danglerID+"\"><title>" + props.WITS_DanglerSectionTitle + "</title>");
-            } else {
+            }
+            if (witsInstance.getOutputType().equals("docbook")) {
                 _handle2.insert(0, "<sect1><title>" + props.WITS_DanglerSectionTitle + "</title>");
             }
             _handle2.insert(_handle2.length(), "</sect1>");
@@ -186,9 +188,10 @@ public class PostProcessor {
                 //Add sect1 place holder
                 String danglerText = null;
                 
-                if (!hideID) {
+                if (witsInstance.getOutputType().equals("solbook")) {
                     danglerText = "<sect1 id=\""+danglerID+"\"><title>" + props.WITS_DanglerSectionTitle + "</title>\r\n<para>" + props.WITS_DanglerSectionSummary + "</para>\r\n";
-                } else {
+                }
+                if (witsInstance.getOutputType().equals("docbook")) {
                     danglerText = "<sect1><title>" + props.WITS_DanglerSectionTitle + "</title>\r\n<para>" + props.WITS_DanglerSectionSummary + "</para>\r\n";
                 }
                 _handle.append(danglerText);
@@ -199,10 +202,10 @@ public class PostProcessor {
                 //Add sect1 and sect2 place holder
                 String danglerText = null;
                 
-                if(!hideID){
+                if (witsInstance.getOutputType().equals("solbook")) {
                     danglerText = "<sect1 id=\""+danglerID+"\"><title>" + props.WITS_DanglerSectionTitle + "</title>\r\n<para>" + props.WITS_DanglerSectionSummary + "</para>\r\n<sect2 id=\"dangler3\"><title>Enter section title</title><para>Insert section summary here.</para>\r\n";
                 }
-                else{
+                if (witsInstance.getOutputType().equals("docbook")) {
                     danglerText = "<sect1><title>" + props.WITS_DanglerSectionTitle + "</title>\r\n<para>" + props.WITS_DanglerSectionSummary + "</para>\r\n<sect2><title>Enter section title</title><para>Insert section summary here.</para>\r\n";
                 }
                 _handle.append(danglerText);

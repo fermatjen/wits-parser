@@ -20,6 +20,7 @@ package org.wits.parsers.inline;
 
 import org.wits.debugger.WITSDebugger;
 import java.util.StringTokenizer;
+import org.wits.WITSInstance;
 import org.wits.WITSProperties;
 import org.wits.parsers.WITSParser;
 import org.wits.patterns.StringHandler;
@@ -33,7 +34,7 @@ public class LinkParser implements WITSParser{
     private String uncleanSGML = null;
     private WITSDebugger debugger = null;
     private WITSProperties props = null;
-    private boolean isDocBookOutput = false;
+    private WITSInstance witsInstance = null;
 
     /**
      * 
@@ -47,8 +48,8 @@ public class LinkParser implements WITSParser{
      *
      * @param uncleanSGML
      */
-    public LinkParser(boolean isDocBookOutput, String uncleanSGML, WITSProperties props) {
-        this.isDocBookOutput = isDocBookOutput;
+    public LinkParser(WITSInstance witsInstance, String uncleanSGML, WITSProperties props) {
+        this.witsInstance = witsInstance;
         this.uncleanSGML = uncleanSGML;
         this.props = props;
     }
@@ -184,9 +185,10 @@ public class LinkParser implements WITSParser{
                 linkRef=linkRef.trim();
                 linkRef = handle.replace(linkRef, " ", "");
 
-                if (!isDocBookOutput) {
+                if (witsInstance.getOutputType().equals("solbook")) {
                     _handle.append(" <ulink url=\"" + linkRef + "\" type=\"text\">");
-                } else {
+                }
+                if (witsInstance.getOutputType().equals("docbook")) {
                     _handle.append(" <link xlink:href=\"" + linkRef + "\">");
                 }
 
@@ -195,9 +197,10 @@ public class LinkParser implements WITSParser{
                 } else {
                     _handle.append(linkRef);
                 }
-                if (!isDocBookOutput) {
+                if (witsInstance.getOutputType().equals("solbook")) {
                     _handle.append("</ulink>");
-                } else {
+                }
+                if (witsInstance.getOutputType().equals("docbook")) {
                     _handle.append("</link>");
                 }
 

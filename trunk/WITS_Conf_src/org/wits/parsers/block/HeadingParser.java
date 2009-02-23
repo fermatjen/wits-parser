@@ -21,6 +21,7 @@ package org.wits.parsers.block;
 import org.wits.debugger.WITSDebugger;
 import java.util.Iterator;
 import java.util.TreeMap;
+import org.wits.WITSInstance;
 import org.wits.WITSProperties;
 import org.wits.parsers.WITSParser;
 import org.wits.patterns.StringHandler;
@@ -35,7 +36,7 @@ public class HeadingParser implements WITSParser{
     private WITSDebugger debugger = null;
     private int ID = 1;
     private WITSProperties props = null;
-    private boolean hideID = false;
+    private WITSInstance witsInstance = null;
 
     /**
      *
@@ -65,8 +66,8 @@ public class HeadingParser implements WITSParser{
      *
      * @param uncleanSGML
      */
-    public HeadingParser(boolean hideID, String uncleanSGML, WITSProperties props) {
-        this.hideID = hideID;
+    public HeadingParser(WITSInstance witsInstance, String uncleanSGML, WITSProperties props) {
+        this.witsInstance = witsInstance;
         this.uncleanSGML = uncleanSGML;
         this.props = props;
     }
@@ -399,9 +400,10 @@ public class HeadingParser implements WITSParser{
             debugger.showDebugMessage("HeadingIC", ll_loc, "Heading Info - Appending ID and Title...");
             _handle.append(uncleanSGML.substring(offset, l_loc));
             
-            if (!hideID) {
+            if (witsInstance.getOutputType().equals("solbook")) {
                 _handle.append(sectPrefix + " id=\"" + sectID + "\"><title>" + sectTitle.trim() + "</title>");
-            } else {
+            }
+            if (witsInstance.getOutputType().equals("docbook")) {
                 _handle.append(sectPrefix + "><title>" + sectTitle.trim() + "</title>");
             }
 

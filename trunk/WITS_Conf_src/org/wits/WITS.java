@@ -23,8 +23,6 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipOutputStream;
 import org.wits.debugger.WITSDebugger;
 import org.wits.test.TestHandler;
@@ -99,14 +97,14 @@ public class WITS {
         props = new WITSProperties();
         inputFiles = new ArrayList<String>();
 
-
+        //Create a WITS Instance
+        WITSInstance witsInstance = new WITSInstance();
 
         String WITS_BrandName = WITSProperties.WITS_BrandName;
         String WITS_VersionName = WITSProperties.WITS_VersionName;
 
-        String WITS_NLString = WITSProperties.WITS_NLString;
-        //Check docbookv5 output
-        boolean isDocBookOutput = false;
+        String WITS_NLString = WITSProperties.WITS_NLString;       
+        
 
         int arsLength = ar.length;
 
@@ -146,7 +144,7 @@ public class WITS {
         }
 
         if (arsLength == 1) {
-            if (ar[0].equalsIgnoreCase("--compress") || ar[0].equalsIgnoreCase("--silent") || ar[0].equalsIgnoreCase("--outputdir") || ar[0].equalsIgnoreCase("--solbook") || ar[0].equalsIgnoreCase("--docbook") || ar[0].equalsIgnoreCase("--test") || ar[0].equalsIgnoreCase("--force") || ar[0].equalsIgnoreCase("--config")) {
+            if (ar[0].equalsIgnoreCase("--compress") || ar[0].equalsIgnoreCase("--silent") || ar[0].equalsIgnoreCase("--outputdir") || ar[0].equalsIgnoreCase("--solbook") || ar[0].equalsIgnoreCase("--docbook") || ar[0].equalsIgnoreCase("--dita") || ar[0].equalsIgnoreCase("--test") || ar[0].equalsIgnoreCase("--force") || ar[0].equalsIgnoreCase("--config")) {
                 printUsage();
             }
         }
@@ -167,7 +165,7 @@ public class WITS {
                 if (!isSilent) {
                     System.out.println("   Output stream...[Disabled]");
                 }
-                isDocBookOutput = true;
+                witsInstance.setOutputType("docbook");
                 break;
             }
         }
@@ -187,7 +185,8 @@ public class WITS {
 
         for (int i = 0; i < arsLength; i++) {
             if (ar[i].equalsIgnoreCase("--docbook")) {
-                isDocBookOutput = true;
+                //isDocBookOutput = true;
+                witsInstance.setOutputType("docbook");
                 if (!isSilent) {
                     System.out.println("   DocBook Output...[Enabled]");
                 }
@@ -197,9 +196,21 @@ public class WITS {
 
         for (int i = 0; i < arsLength; i++) {
             if (ar[i].equalsIgnoreCase("--solbook")) {
-                isDocBookOutput = false;
+                //isDocBookOutput = false;
+                witsInstance.setOutputType("solbook");
                 if (!isSilent) {
                     System.out.println("   SolBook Output...[Enabled]");
+                }
+                break;
+            }
+        }
+
+        for (int i = 0; i < arsLength; i++) {
+            if (ar[i].equalsIgnoreCase("--dita")) {
+                //isDocBookOutput = false;
+                witsInstance.setOutputType("dita");
+                if (!isSilent) {
+                    System.out.println("   Dita Output...[Enabled]");
                 }
                 break;
             }
@@ -245,7 +256,7 @@ public class WITS {
 
         for (int i = 0; i < arsLength; i++) {
             //System.out.println("Checking ARG:"+ar[i]);
-            if (ar[i].equalsIgnoreCase("--compress") || ar[i].equalsIgnoreCase("--silent") || ar[i].equalsIgnoreCase("--solbook") || ar[i].equalsIgnoreCase("--docbook") || ar[i].equalsIgnoreCase("--force") || ar[i].equalsIgnoreCase("--test")) {
+            if (ar[i].equalsIgnoreCase("--compress") || ar[i].equalsIgnoreCase("--silent") || ar[i].equalsIgnoreCase("--solbook") || ar[i].equalsIgnoreCase("--docbook") || ar[i].equalsIgnoreCase("--dita") || ar[i].equalsIgnoreCase("--force") || ar[i].equalsIgnoreCase("--test")) {
                 continue;
             }
             if (ar[i].equalsIgnoreCase("--config")) {
@@ -263,7 +274,7 @@ public class WITS {
         for (int i = 0; i < arsLength; i++) {
             //check sub options
 
-            if (ar[i].equalsIgnoreCase("--compress") || ar[i].equalsIgnoreCase("--silent") || ar[i].equalsIgnoreCase("--solbook") || ar[i].equalsIgnoreCase("--docbook") || ar[i].equalsIgnoreCase("--test") || ar[i].equalsIgnoreCase("--force")) {
+            if (ar[i].equalsIgnoreCase("--compress") || ar[i].equalsIgnoreCase("--silent") || ar[i].equalsIgnoreCase("--solbook") || ar[i].equalsIgnoreCase("--docbook") || ar[i].equalsIgnoreCase("--dita") || ar[i].equalsIgnoreCase("--test") || ar[i].equalsIgnoreCase("--force")) {
                 continue;
             }
             if (ar[i].equalsIgnoreCase("--config")) {
@@ -321,7 +332,7 @@ public class WITS {
                     System.out.println("\r\n   Reading...[" + inputFile + "]");
                 }
 
-                processor = new WITSProcessor(isDocBookOutput, isForceParsing, isDebuggingOn, inputFile, outputFile, props);
+                processor = new WITSProcessor(witsInstance, isForceParsing, isDebuggingOn, inputFile, outputFile, props);
                 processor.setWitsID(witsID);
 
 
@@ -350,20 +361,24 @@ public class WITS {
                 }
 
 
-                if (!isDocBookOutput) {
+                if (witsInstance.getOutputType().equals("solbook")) {
                     if (!isSilent) {
                         System.out.println("   Building SolBook Content...[DONE]");
                     }
                     SolChapterWriter cWriter = new SolChapterWriter(cleanSGML, props);
                     String chapterBody = cWriter.getPartialChapterBody();
                     bookContent = bookContent + chapterBody;
-                } else {
+                }
+                if (witsInstance.getOutputType().equals("docbook")) {
                     if (!isSilent) {
                         System.out.println("   Building DocBook Content...[DONE]");
                     }
                     DocChapterWriter cWriter = new DocChapterWriter(cleanSGML, props);
                     String chapterBody = cWriter.getPartialChapterBody();
                     bookContent = bookContent + chapterBody;
+                }
+                if (witsInstance.getOutputType().equals("dita")) {
+                    System.out.println("THIS FEATURE IS NOT FUNCTIONAL!");
                 }
 
                 //get debugger context
@@ -374,21 +389,23 @@ public class WITS {
                 if (!isNullOutput) {
                     File chapterPath = null;
 
-                    if (!isDocBookOutput) {
+                    if (witsInstance.getOutputType().equals("solbook")) {
                         chapterPath = new File(outputFile, getOutputFile("sgm"));
-                    } else {
+                    }
+                    if (witsInstance.getOutputType().equals("docbook")) {
                         chapterPath = new File(outputFile, getOutputFile("xml"));
                     }
                     //write individual sgml files
-                    WITSFileWriter fileWriter = new WITSFileWriter(isDocBookOutput, chapterPath, null, null, props);
+                    WITSFileWriter fileWriter = new WITSFileWriter(witsInstance, chapterPath, null, null, props);
                     //fileWriter.writeFile(cleanSGML, debugString);
 
                     if (!isCompressedOutput) {
-                        if (isDocBookOutput) {
+                        if (witsInstance.getOutputType().equals("docbook")) {
                             if (!isSilent) {
                                 System.out.println("   Writing DocBook Chapter...[" + chapterPath + "]");
                             }
-                        } else {
+                        }
+                        if (witsInstance.getOutputType().equals("solbook")) {
                             if (!isSilent) {
                                 System.out.println("   Writing SolBook Chapter...[" + chapterPath + "]");
                             }
@@ -403,7 +420,7 @@ public class WITS {
 
                     //run fatal cases for DocBook Output only.
 
-                    if (isDocBookOutput) {
+                    if (witsInstance.getOutputType().equals("docbook")) {
                         String header1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<chapter version=\"5.0\"\r\n    xmlns=\"http://docbook.org/ns/docbook\"\r\n    xmlns:xlink=\"http://www.w3.org/1999/xlink\"\r\n    xmlns:xi=\"http://www.w3.org/2001/XInclude\"\r\n    xmlns:svg=\"http://www.w3.org/2000/svg\"\r\n    xmlns:m=\"http://www.w3.org/1998/Math/MathML\"\r\n    xmlns:html=\"http://www.w3.org/1999/xhtml\"\r\n    xmlns:db=\"http://docbook.org/ns/docbook\">\r\n" + cleanSGML + "</chapter>";
 
                         TestHandler handler = new TestHandler(inputFile, header1);
@@ -441,19 +458,21 @@ public class WITS {
                     //write the book file now
                     File bookPath = null;
 
-                    if (!isDocBookOutput) {
+                    if (witsInstance.getOutputType().equals("solbook")) {
                         bookPath = new File(outputFile, getOutputFile("book"));
-                    } else {
+                    }
+                    if (witsInstance.getOutputType().equals("docbook")) {
                         bookPath = new File(outputFile, getOutputFile("book.xml"));
                     }
-                    WITSFileWriter fileWriter = new WITSFileWriter(isDocBookOutput, null, bookPath, null, props);
+                    WITSFileWriter fileWriter = new WITSFileWriter(witsInstance, null, bookPath, null, props);
 
                     if (!isCompressedOutput) {
-                        if (isDocBookOutput) {
+                        if (witsInstance.getOutputType().equals("docbook")) {
                             if (!isSilent) {
                                 System.out.println("   Writing DocBook Book...[" + bookPath + "]");
                             }
-                        } else {
+                        }
+                        if (witsInstance.getOutputType().equals("solbook")) {
                             if (!isSilent) {
                                 System.out.println("   Writing SolBook Book...[" + bookPath + "]");
                             }
@@ -470,9 +489,10 @@ public class WITS {
                 if (outputStream != null) {
                     File bookPath = null;
 
-                    if (!isDocBookOutput) {
+                    if (witsInstance.getOutputType().equals("solbook")) {
                         bookPath = new File(outputFile, getOutputFile("book"));
-                    } else {
+                    }
+                    if (witsInstance.getOutputType().equals("docbook")) {
                         bookPath = new File(outputFile, getOutputFile("book.xml"));
                     }
 
