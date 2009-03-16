@@ -326,6 +326,8 @@ public class WITS {
                 System.out.println("\r\n   To Parse...[ " + inputFiles.size() + " files]");
             }
 
+            String entityHeaders = new String();
+            
             for (int i = 0; i < inputFiles.size(); i++) {
                 inputFile = (String) inputFiles.get(i);
 
@@ -353,8 +355,11 @@ public class WITS {
 
                 witsID = processor.getWitsID();
 
-
-
+                //Update the wits instance from the interceptors.
+                witsInstance = processor.getWitsInstance();
+                entityHeaders += witsInstance.getEntityheaders();
+                //System.out.println("EREF:"+witsInstance.getEntityheaders());
+                
                 //check alien formats
                 if (cleanSGML.startsWith("ERROR:")) {
                     System.out.println(cleanSGML.substring(6, cleanSGML.length()));
@@ -446,6 +451,9 @@ public class WITS {
                 }
 
             }
+
+            //Rebuild the instance with entity headers
+            witsInstance.setEntityheaders(entityHeaders);
 
             if (isNullOutput) {
                 if (!isSilent) {

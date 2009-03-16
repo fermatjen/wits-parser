@@ -53,6 +53,7 @@ public class WITSFileWriter {
         this.bookPath = bookPath;
         this.debugPath = debugPath;
         this.props = props;
+        //System.out.println("EH fROM WFW:"+witsInstance.getEntityheaders());
     }
 
     /**
@@ -175,7 +176,7 @@ public class WITSFileWriter {
 
             if (isCompressedOutput) {
                 if (witsInstance.getOutputType().equals("solbook")) {
-                    SolBookWriter cWriter = new SolBookWriter(cleanSGML, props);
+                    SolBookWriter cWriter = new SolBookWriter(witsInstance, cleanSGML, props);
                     ZipEntry entry = new ZipEntry(bookPath.getName());
 
                     try {
@@ -200,7 +201,7 @@ public class WITSFileWriter {
                 }
             } else {
                 if (witsInstance.getOutputType().equals("solbook")) {
-                    SolBookWriter bWriter = new SolBookWriter(cleanSGML, props);
+                    SolBookWriter bWriter = new SolBookWriter(witsInstance, cleanSGML, props);
 
                     fw.write(bWriter.getPartialBookBody());
                     fw.flush();
