@@ -15,7 +15,6 @@
  * input used in their production; they are not affected by this license.
  *
  */
-
 package org.wits.parsers.inline;
 
 import java.util.StringTokenizer;
@@ -28,7 +27,7 @@ import org.wits.patterns.StringHandler;
  *
  * @author FJ
  */
-public class ScriptParser implements WITSParser{
+public class ScriptParser implements WITSParser {
 
     private String uncleanSGML = null;
     private WITSDebugger debugger = null;
@@ -79,34 +78,34 @@ public class ScriptParser implements WITSParser{
         StringBuilder _handle = new StringBuilder();
         /*
         while (true) {
-            int l_loc = uncleanSGML.indexOf("-", offset + 1);
-            int r_loc = uncleanSGML.indexOf("-", l_loc + 1);
+        int l_loc = uncleanSGML.indexOf("-", offset + 1);
+        int r_loc = uncleanSGML.indexOf("-", l_loc + 1);
 
-            //System.out.println("LOC:" + l_loc + " ROC:" + r_loc);
+        //System.out.println("LOC:" + l_loc + " ROC:" + r_loc);
 
-            if (l_loc == -1 || r_loc == -1) {
-                _handle.append(uncleanSGML.substring(offset, uncleanSGML.length()));
-                break;
-            }
+        if (l_loc == -1 || r_loc == -1) {
+        _handle.append(uncleanSGML.substring(offset, uncleanSGML.length()));
+        break;
+        }
 
-            String scriptCandidate = uncleanSGML.substring(l_loc, r_loc);
-            //System.out.println("SCAND:" + scriptCandidate);
+        String scriptCandidate = uncleanSGML.substring(l_loc, r_loc);
+        //System.out.println("SCAND:" + scriptCandidate);
 
-            if (scriptCandidate.indexOf(" ") == -1) {
-                //process symbols
-                _handle.append(uncleanSGML.substring(offset, l_loc));
+        if (scriptCandidate.indexOf(" ") == -1) {
+        //process symbols
+        _handle.append(uncleanSGML.substring(offset, l_loc));
 
-                offset = r_loc + 1;
-                continue;
-            } else {
-                //omit
-                _handle.append(uncleanSGML.substring(offset, l_loc));
-                offset = l_loc;
-                continue;
-            }
+        offset = r_loc + 1;
+        continue;
+        } else {
+        //omit
+        _handle.append(uncleanSGML.substring(offset, l_loc));
+        offset = l_loc;
+        continue;
+        }
 
         }
-        */
+         */
         //uncleanSGML = _handle.toString();
 
         //we do not support figures       
@@ -132,15 +131,15 @@ public class ScriptParser implements WITSParser{
             String imageFileExt = ".gif";
             String imageFileNamePrefix = "Unknown";
             String imageTitle = "UnknownTitle";
-            
-            if(scriptCandidate.indexOf("|") != -1){
-                StringTokenizer stok = new StringTokenizer(scriptCandidate,"|");
+
+            if (scriptCandidate.indexOf("|") != -1) {
+                StringTokenizer stok = new StringTokenizer(scriptCandidate, "|");
                 imageFileName = stok.nextToken();
                 imageFileName = imageFileName.substring(1, imageFileName.length());
                 String uncleanTitle = stok.nextToken();
-                imageTitle = uncleanTitle.substring(7, uncleanTitle.length()-1);
-                if(imageFileName.indexOf(".") != -1){
-                    StringTokenizer stok2 = new StringTokenizer(imageFileName,".");
+                imageTitle = uncleanTitle.substring(7, uncleanTitle.length() - 1);
+                if (imageFileName.indexOf(".") != -1) {
+                    StringTokenizer stok2 = new StringTokenizer(imageFileName, ".");
                     imageFileNamePrefix = stok2.nextToken();
                     imageFileExt = stok2.nextToken();
                 }
@@ -162,9 +161,17 @@ public class ScriptParser implements WITSParser{
             if (scriptCandidate.indexOf("<LB>") == -1) {
                 //process symbols
                 _handle.append(uncleanSGML.substring(offset, l_loc));
-                entityRefs += "<!ENTITY "+imageFileNamePrefix+" SYSTEM \""+imageFileName+"\" NDATA "+imageFileExt+">\r\n";
+                String placeholderText = null;
                 
-                String placeholderText = "<figure id=\""+imageFileNamePrefix+"\"><title>"+imageTitle+"</title><mediaobject><imageobject><imagedata entityref=\""+imageFileNamePrefix+"\"></imageobject><textobject><simpara>"+imageTitle+"</simpara></textobject></mediaobject></figure>";
+                if (witsInstance.getOutputType().equals("solbook")) {
+                    entityRefs += "<!ENTITY " + imageFileNamePrefix + " SYSTEM \"" + imageFileName + "\" NDATA " + imageFileExt + ">\r\n";
+
+                    placeholderText = "<figure id=\"" + imageFileNamePrefix + "\"><title>" + imageTitle + "</title><mediaobject><imageobject><imagedata entityref=\"" + imageFileNamePrefix + "\"></imageobject><textobject><simpara>" + imageTitle + "</simpara></textobject></mediaobject></figure>";
+
+                }
+                else{
+                    placeholderText = "Figure: "+imageFileName;
+                }
                 _handle.append(placeholderText);
 
                 offset = r_loc + 1;
