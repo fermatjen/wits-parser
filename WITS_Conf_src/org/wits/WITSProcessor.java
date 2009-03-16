@@ -52,6 +52,14 @@ public class WITSProcessor {
     //Warning always on. User can't turn off.
     private boolean isWarningOn = true;
     private String inputFile = null;
+
+    public WITSInstance getWitsInstance() {
+        return witsInstance;
+    }
+
+    public void setWitsInstance(WITSInstance witsInstance) {
+        this.witsInstance = witsInstance;
+    }
     private String outputFile = null;
     private WITSDebugger debugger = null;
     private String inputText = null;
@@ -176,10 +184,11 @@ public class WITSProcessor {
         uncleanSGML = exICParser.getProcessedText();
 
         //Remove excess baggage
-        ScriptParser scriptParser = new ScriptParser(uncleanSGML);
+        ScriptParser scriptParser = new ScriptParser(witsInstance, uncleanSGML);
         scriptParser.setDebugger(debugger);
         uncleanSGML = scriptParser.getProcessedText();
-
+        witsInstance = scriptParser.getWitsInstance();
+        
         //Call Pre Processor        
         PreProcessor preICParser = new PreProcessor(uncleanSGML);
         preICParser.setDebugger(debugger);

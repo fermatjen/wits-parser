@@ -18,6 +18,8 @@
 
 package org.wits.parsers.inline;
 
+import java.util.StringTokenizer;
+import org.wits.WITSInstance;
 import org.wits.debugger.WITSDebugger;
 import org.wits.parsers.WITSParser;
 import org.wits.patterns.StringHandler;
@@ -30,6 +32,8 @@ public class ScriptParser implements WITSParser{
 
     private String uncleanSGML = null;
     private WITSDebugger debugger = null;
+    private WITSInstance witsInstance = null;
+    private String entityRefs = null;
 
     /**
      *
@@ -39,12 +43,22 @@ public class ScriptParser implements WITSParser{
         this.debugger = debugger;
     }
 
+    public WITSInstance getWitsInstance() {
+        return witsInstance;
+    }
+
+    public void setWitsInstance(WITSInstance witsInstance) {
+        this.witsInstance = witsInstance;
+    }
+
     /**
      *
      * @param uncleanSGML
      */
-    public ScriptParser(String uncleanSGML) {
+    public ScriptParser(WITSInstance witsInstance, String uncleanSGML) {
         this.uncleanSGML = uncleanSGML;
+        this.witsInstance = witsInstance;
+        entityRefs = new String();
     }
 
     /**
@@ -113,11 +127,45 @@ public class ScriptParser implements WITSParser{
 
             String scriptCandidate = uncleanSGML.substring(l_loc, r_loc);
             //System.out.println("SCAND:" + scriptCandidate);
+            //Check if filename and title can be extracted.
+            String imageFileName = "Unknown.gif";
+            String imageFileExt = ".gif";
+            String imageFileNamePrefix = "Unknown";
+            String imageTitle = "UnknownTitle";
+            
+            if(scriptCandidate.indexOf("|") != -1){
+                StringTokenizer stok = new StringTokenizer(scriptCandidate,"|");
+                imageFileName = stok.nextToken();
+                imageFileName = imageFileName.substring(1, imageFileName.length());
+                String uncleanTitle = stok.nextToken();
+                imageTitle = uncleanTitle.substring(7, uncleanTitle.length()-1);
+                if(imageFileName.indexOf(".") != -1){
+                    StringTokenizer stok2 = new StringTokenizer(imageFileName,".");
+                    imageFileNamePrefix = stok2.nextToken();
+                    imageFileExt = stok2.nextToken();
+                }
+            }
+
+            StringHandler handler = new StringHandler();
+            handler.setDebugger(debugger);
+            imageFileNamePrefix = handler.replace(imageFileNamePrefix, " ", "", 0);
+            imageFileNamePrefix = handler.replace(imageFileNamePrefix, "^", "", 0);
+            imageFileNamePrefix = handler.replace(imageFileNamePrefix, "#", "", 0);
+            imageFileNamePrefix = handler.replace(imageFileNamePrefix, "&", "", 0);
+            imageFileNamePrefix = handler.replace(imageFileNamePrefix, "<", "", 0);
+            imageFileNamePrefix = handler.replace(imageFileNamePrefix, ">", "", 0);
+            imageFileNamePrefix = handler.replace(imageFileNamePrefix, "%", "", 0);
+            imageFileNamePrefix = handler.replace(imageFileNamePrefix, "_", "", 0);
+            imageFileNamePrefix = handler.replace(imageFileNamePrefix, "*", "", 0);
+            imageFileNamePrefix = handler.replace(imageFileNamePrefix, "!", "", 0);
 
             if (scriptCandidate.indexOf("<LB>") == -1) {
                 //process symbols
                 _handle.append(uncleanSGML.substring(offset, l_loc));
-                _handle.append("_Figure Placeholder here._");
+                entityRefs += "<!ENTITY "+imageFileNamePrefix+" SYSTEM \""+imageFileName+"\" NDATA "+imageFileExt+">\r\n";
+                
+                String placeholderText = "<figure id=\""+imageFileNamePrefix+"\"><title>"+imageTitle+"</title><mediaobject><imageobject><imagedata entityref=\""+imageFileNamePrefix+"\"></imageobject><textobject><simpara>"+imageTitle+"</simpara></textobject></mediaobject></figure>";
+                _handle.append(placeholderText);
 
                 offset = r_loc + 1;
                 continue;
@@ -301,6 +349,10 @@ public class ScriptParser implements WITSParser{
         handler = new StringHandler();
         handler.setDebugger(debugger);
         uncleanSGML = handler.replace(uncleanSGML, "{tip}", "");
+
+        //Update the entity refs
+        //System.out.println("SETTING EREF:"+entityRefs);
+        witsInstance.setEntityheaders(entityRefs);
 
         return uncleanSGML;
     }

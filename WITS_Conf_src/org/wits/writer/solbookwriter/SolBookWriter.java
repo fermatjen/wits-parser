@@ -15,9 +15,9 @@
  * input used in their production; they are not affected by this license.
  *
  */
-
 package org.wits.writer.solbookwriter;
 
+import org.wits.WITSInstance;
 import org.wits.WITSProperties;
 import org.wits.processors.ContentDetector;
 
@@ -34,12 +34,14 @@ public class SolBookWriter {
     private final String footer1 = "</chapter>";
     private final String footer2 = "</book>";
     private WITSProperties props = null;
+    private WITSInstance witsInstance = null;
 
     /**
      *
      * @param textBlock
      */
-    public SolBookWriter(String textBlock, WITSProperties props) {
+    public SolBookWriter(WITSInstance witsInstance, String textBlock, WITSProperties props) {
+        this.witsInstance = witsInstance;
         this.textBlock = textBlock;
         this.props = props;
 
@@ -63,7 +65,14 @@ public class SolBookWriter {
             chapHighlights = chapterTitle;
         }
 
-        header1 = "<!--" + WITSProperties.WITS_BrandName + " " + WITSProperties.WITS_VersionName + "--> \r\n<!DOCTYPE BOOK PUBLIC \"-//Sun Microsystems//DTD SolBook 3.5//EN\" [\r\n<!ENTITY abstract SYSTEM \"abstract.sgm\">\r\n<!ENTITY typeconv SYSTEM \"typeconv.sgm\">\r\n<!ENTITY sundocs SYSTEM \"sundocs.sgm\">\r\n<!ENTITY fr-other-trademarks SYSTEM \"fr-other-trademarks.sgm\">\r\n<!ENTITY other-trademarks SYSTEM \"other-trademarks.sgm\">\r\n<!ENTITY sun-trademarks SYSTEM \"sun-trademarks.sgm\">\r\n<!ENTITY preface SYSTEM \"preface.sgm\">\r\n<!ENTITY fr-legal SYSTEM \"fr-legal.sgm\">\r\n<!ENTITY legal SYSTEM \"legal.sgm\">\r\n]>\r\n";
+        String entityHeaders = witsInstance.getEntityheaders();
+        //System.out.println("EHEADERS:"+entityHeaders);
+        
+        //if (entityHeaders != null) {
+            header1 = "<!--" + WITSProperties.WITS_BrandName + " " + WITSProperties.WITS_VersionName + "--> \r\n<!DOCTYPE BOOK PUBLIC \"-//Sun Microsystems//DTD SolBook 3.5//EN\" [\r\n<!ENTITY abstract SYSTEM \"abstract.sgm\">\r\n<!ENTITY typeconv SYSTEM \"typeconv.sgm\">\r\n<!ENTITY sundocs SYSTEM \"sundocs.sgm\">\r\n<!ENTITY fr-other-trademarks SYSTEM \"fr-other-trademarks.sgm\">\r\n<!ENTITY other-trademarks SYSTEM \"other-trademarks.sgm\">\r\n<!ENTITY sun-trademarks SYSTEM \"sun-trademarks.sgm\">\r\n<!ENTITY preface SYSTEM \"preface.sgm\">\r\n<!ENTITY fr-legal SYSTEM \"fr-legal.sgm\">\r\n<!ENTITY legal SYSTEM \"legal.sgm\">\r\n"+entityHeaders+"]>\r\n";
+        //} else {
+            //header1 = "<!--" + WITSProperties.WITS_BrandName + " " + WITSProperties.WITS_VersionName + "--> \r\n<!DOCTYPE BOOK PUBLIC \"-//Sun Microsystems//DTD SolBook 3.5//EN\" [\r\n<!ENTITY abstract SYSTEM \"abstract.sgm\">\r\n<!ENTITY typeconv SYSTEM \"typeconv.sgm\">\r\n<!ENTITY sundocs SYSTEM \"sundocs.sgm\">\r\n<!ENTITY fr-other-trademarks SYSTEM \"fr-other-trademarks.sgm\">\r\n<!ENTITY other-trademarks SYSTEM \"other-trademarks.sgm\">\r\n<!ENTITY sun-trademarks SYSTEM \"sun-trademarks.sgm\">\r\n<!ENTITY preface SYSTEM \"preface.sgm\">\r\n<!ENTITY fr-legal SYSTEM \"fr-legal.sgm\">\r\n<!ENTITY legal SYSTEM \"legal.sgm\">\r\n]>\r\n";
+        //}
         header2 = "<book id=\"REPLACE-WITH-SHORTNAME\" lang=\"en\">\r\n<title>" + chapterTitle + "</title>\r\n<bookinfo>\r\n<authorgroup><author><firstname>" + props.WITS_AuthorName + "</firstname></author></authorgroup>\r\n<pubsnumber>" + props.WITS_PubsNumber + "</pubsnumber>\r\n<releaseinfo>" + props.WITS_ReleaseInfo + "</releaseinfo>\r\n<pubdate>" + props.WITS_PubDate + "</pubdate>\r\n<publisher><publishername>" + props.WITS_PubName + "</publishername></publisher>\r\n<copyright><year>" + props.WITS_CopyrightYear + "</year></copyright>\r\n<abstract><para>" + bookAbstract + "</para></abstract>\r\n<legalnotice><para>" + props.WITS_LegalNotice + "</para></legalnotice>\r\n</bookinfo>\r\n";
 
 

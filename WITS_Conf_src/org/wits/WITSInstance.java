@@ -26,6 +26,15 @@ public class WITSInstance {
 
     private String inputType = "confluence";
     private String outputType = "solbook";
+    private String entityheaders = null;
+
+    public String getEntityheaders() {
+        return entityheaders;
+    }
+
+    public void setEntityheaders(String entityheaders) {
+        this.entityheaders = entityheaders;
+    }
 
     public String getInputType() {
         return inputType;
