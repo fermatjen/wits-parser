@@ -23,6 +23,8 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.zip.ZipOutputStream;
 import org.wits.debugger.WITSDebugger;
 import org.wits.test.TestHandler;
@@ -318,6 +320,8 @@ public class WITS {
             singleInputFile = false;
         }
 
+        Collections.sort(inputFiles);
+        
         int totalErrors = 0;
         int totalWarnings = 0;
 

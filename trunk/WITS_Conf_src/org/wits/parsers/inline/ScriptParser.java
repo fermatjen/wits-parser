@@ -162,15 +162,14 @@ public class ScriptParser implements WITSParser {
                 //process symbols
                 _handle.append(uncleanSGML.substring(offset, l_loc));
                 String placeholderText = null;
-                
+
                 if (witsInstance.getOutputType().equals("solbook")) {
-                    entityRefs += "<!ENTITY " + imageFileNamePrefix + " SYSTEM \"" + imageFileName + "\" NDATA " + imageFileExt + ">\r\n";
+                    entityRefs += "<!ENTITY " + imageFileNamePrefix + " SYSTEM \"" + "graphics/" + imageFileName + "\" NDATA " + imageFileExt + ">\r\n";
 
                     placeholderText = "<figure id=\"" + imageFileNamePrefix + "\"><title>" + imageTitle + "</title><mediaobject><imageobject><imagedata entityref=\"" + imageFileNamePrefix + "\"></imageobject><textobject><simpara>" + imageTitle + "</simpara></textobject></mediaobject></figure>";
 
-                }
-                else{
-                    placeholderText = "Figure: "+imageFileName;
+                } else {
+                    placeholderText = "Figure: " + imageFileName;
                 }
                 _handle.append(placeholderText);
 
@@ -261,7 +260,14 @@ public class ScriptParser implements WITSParser {
             bqCandidate = handler.replace(bqCandidate, "<LB>\r\n", " ");
 
             _handle.append(uncleanSGML.substring(offset, l_loc));
-            _handle.append("<note><para>" + bqCandidate.trim() + "</para></note>");
+            bqCandidate = bqCandidate.trim();
+
+            //Do not allow screens in note.
+            if (bqCandidate.indexOf("<noparse>") != -1 || bqCandidate.indexOf("<mediaobject>") != -1) {
+                _handle.append("<para>" + bqCandidate + "</para>");
+            } else {
+                _handle.append("<note><para>" + bqCandidate + "</para></note>");
+            }
 
             offset = r_loc;
         }
@@ -290,7 +296,14 @@ public class ScriptParser implements WITSParser {
 
             _handle.append(uncleanSGML.substring(offset, l_loc));
             bqCandidate = handler.replace(bqCandidate, "<LB>\r\n", " ");
-            _handle.append("<caution><para>" + bqCandidate.trim() + "</para></caution>");
+
+            bqCandidate = bqCandidate.trim();
+
+            if (bqCandidate.indexOf("<noparse>") != -1 || bqCandidate.indexOf("<mediaobject>") != -1) {
+                _handle.append("<para>" + bqCandidate + "</para>");
+            } else {
+                _handle.append("<caution><para>" + bqCandidate + "</para></caution>");
+            }
 
             offset = r_loc;
         }
@@ -319,7 +332,14 @@ public class ScriptParser implements WITSParser {
 
             _handle.append(uncleanSGML.substring(offset, l_loc));
             bqCandidate = handler.replace(bqCandidate, "<LB>\r\n", " ");
-            _handle.append("<note><para>" + bqCandidate.trim() + "</para></note>");
+
+            bqCandidate = bqCandidate.trim();
+
+            if (bqCandidate.indexOf("<noparse>") != -1 || bqCandidate.indexOf("<mediaobject>") != -1) {
+                _handle.append("<para>" + bqCandidate + "</para>");
+            } else {
+                _handle.append("<note><para>" + bqCandidate + "</para></note>");
+            }
 
             offset = r_loc;
         }
@@ -348,7 +368,14 @@ public class ScriptParser implements WITSParser {
 
             _handle.append(uncleanSGML.substring(offset, l_loc));
             bqCandidate = handler.replace(bqCandidate, "<LB>\r\n", " ");
-            _handle.append("<tip><para>" + bqCandidate.trim() + "</para></tip>");
+
+            bqCandidate = bqCandidate.trim();
+
+            if (bqCandidate.indexOf("<noparse>") != -1 || bqCandidate.indexOf("<mediaobject>") != -1) {
+                _handle.append("<para>" + bqCandidate + "</para>");
+            } else {
+                _handle.append("<tip><para>" + bqCandidate + "</para></tip>");
+            }
 
             offset = r_loc;
         }

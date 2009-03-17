@@ -339,15 +339,15 @@ public class WITSFileReader {
                 //str = AIBreakLine(str);
                 //Handle special table formats like
                 //||col1|col2
-                str = replace(str,"||","$ROWM",0);
-                str = replace(str,"|","$COLM",0);
+                str = replace(str, "||", "$ROWM", 0);
+                str = replace(str, "|", "$COLM", 0);
 
                 if (str.startsWith("$ROWM") && str.indexOf("$COLM") != -1) {
                     str = replace(str, "$ROWM", "$COLM", 0);
                 }
 
-                str = replace(str,"$ROWM","||",0);
-                str = replace(str,"$COLM","|",0);
+                str = replace(str, "$ROWM", "||", 0);
+                str = replace(str, "$COLM", "|", 0);
 
                 body = LBCheck(body, str);
 
@@ -359,7 +359,77 @@ public class WITSFileReader {
                     body += "<LB>\r\n";
                     str = in.readLine();
                     str = str.trim();
+                    str = quickClean(str);
                     body = LBCheck(body, str);
+                }
+
+                //Code not allowed in nested list
+                                if (str.startsWith("###") || str.endsWith("***")) {
+                    //System.out.println("NESTED!!");
+                    str = quickClean(str);
+                    if (str.indexOf("{code}") != -1) {
+                        //System.out.println("NESTED!!CODESAMELINE:" + str);
+                        //System.out.println("APPENDING:" + str.substring(1, str.length()));
+                        body += str.substring(2, str.length());
+                        body += "<LB>\r\n";
+                    } else {
+                        //System.out.println("NESTED!!NOCODE:" + str);
+                        String tstr = str;
+                        //Check the next line
+                        str = in.readLine();
+                        str = quickClean(str);
+                        str = str.trim();
+                        if (str.indexOf("{code}") != -1) {
+                            //System.out.println("NESTED!!CODENEXTLINE:" + str);
+                            //System.out.println("APPENDING:" + tstr.substring(1, tstr.length()));
+                            body += tstr.substring(2, tstr.length());
+                            body += "<LB>\r\n";
+                            //System.out.println("APPENDING:" + str);
+                            body += str;
+                            body += "<LB>\r\n";
+                        } else {
+                            //System.out.println("APPENDING:" + tstr);
+                            body += tstr;
+                            body += "<LB>\r\n";
+                            //System.out.println("APPENDING:" + str);
+                            body += str;
+                            body += "<LB>\r\n";
+                        }
+                    }
+                }
+
+                if (str.startsWith("##") || str.endsWith("**")) {
+                    //System.out.println("NESTED!!");
+                    str = quickClean(str);
+                    if (str.indexOf("{code}") != -1) {
+                        //System.out.println("NESTED!!CODESAMELINE:" + str);
+                        //System.out.println("APPENDING:" + str.substring(1, str.length()));
+                        body += str.substring(1, str.length());
+                        body += "<LB>\r\n";
+                    } else {
+                        //System.out.println("NESTED!!NOCODE:" + str);
+                        String tstr = str;
+                        //Check the next line
+                        str = in.readLine();
+                        str = quickClean(str);
+                        str = str.trim();
+                        if (str.indexOf("{code}") != -1) {
+                            //System.out.println("NESTED!!CODENEXTLINE:" + str);
+                            //System.out.println("APPENDING:" + tstr.substring(1, tstr.length()));
+                            body += tstr.substring(1, tstr.length());
+                            body += "<LB>\r\n";
+                            //System.out.println("APPENDING:" + str);
+                            body += str;
+                            body += "<LB>\r\n";
+                        } else {
+                            //System.out.println("APPENDING:" + tstr);
+                            body += tstr;
+                            body += "<LB>\r\n";
+                            //System.out.println("APPENDING:" + str);
+                            body += str;
+                            body += "<LB>\r\n";
+                        }
+                    }
                 }
 
                 //This is a bug fix to handle no heading table.
