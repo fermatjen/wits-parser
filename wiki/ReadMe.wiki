@@ -160,7 +160,40 @@ The above WITS target handlers instruct the WITS parser to parse the enclosed bl
 java -jar WITS.jar input1.txt --target target1
 }}
 
-{{target1}} is an optional. If you do not provide any option, all conditions are ignored.
+target1 is optional. If you do not provide any option, all conditions are ignored. You can specify multiple targets:
+
+{{{
+{excerpt:hidden=true}
+#WITSTarget:START=target1,target2
+{excerpt}
+...
+conditional text here. This will
+be parsed if any of the targets matches.
+...
+{excerpt:hidden=true}
+#WITSTarget:END=targte1,target2
+{excerpt}
+}}}
+
+In the above case, the enclosed text will be parsed if the parser is invoked with either target1 or target2 option:
+
+{{{
+java -jar WITS.jar input1.txt --target target1
+}}}
+
+In the above case, enclosed block is processed.
+
+{{{
+java -jar WITS.jar input1.txt --target target2
+}}}
+
+In the above case, enclosed block is processed.
+
+{{{
+java -jar WITS.jar input1.txt --target target3
+}}}
+
+In the above case, enclosed block is not processed.
 
 =What the tool can do?=
 
