@@ -137,6 +137,31 @@ Example 2: Create DocBook Output.
 
 }}}
 
+==Conditional Outputs
+You can hide or make text blocks available for WITS processing by using 'targets'. WITS targets are supported for Confluence wiki pages only.
+
+In your wiki page, surround the conditional texts with comment blocks:
+
+{{{
+{excerpt:hidden=true}
+#WITSTarget:START=target1
+{excerpt}
+...
+conditional text here
+...
+{excerpt:hidden=true}
+#WITSTarget:END=targte1
+{excerpt}
+}}}
+
+The above WITS target handlers instruct the WITS parser to parse the enclosed block of text only when the conversion is invoked with that particular targets:
+
+{{{
+java -jar WITS.jar input1.txt --target target1
+}}
+
+{{target1}} is an optional. If you do not provide any option, all conditions are ignored.
+
 =What the tool can do?=
 
 In a summary,
