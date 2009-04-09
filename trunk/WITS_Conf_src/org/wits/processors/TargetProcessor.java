@@ -114,6 +114,11 @@ public class TargetProcessor {
                 }
             }
 
+            //override for all target
+            if(targetAttrs.equals("all")){
+                isBlockVisible = true;
+            }
+
             if (isBlockVisible) {
                 _handle.append(inputText.substring(offset, l_loc));
                 _handle.append(inputText.substring(ll_loc+1, r_loc));
