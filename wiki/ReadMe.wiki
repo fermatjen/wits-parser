@@ -137,7 +137,7 @@ Example 2: Create DocBook Output.
 
 }}}
 
-==Conditional Outputs
+==Conditional Outputs==
 You can hide or make text blocks available for WITS processing by using 'targets'. WITS targets are supported for Confluence wiki pages only.
 
 In your wiki page, surround the conditional texts with comment blocks:
