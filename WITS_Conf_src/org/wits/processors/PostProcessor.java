@@ -119,6 +119,9 @@ public class PostProcessor {
         uncleanSGML = handler.replace(uncleanSGML, "<LB>", "", 0);
         uncleanSGML = handler.replace(uncleanSGML, "{excerpt}", "", 0);
 
+        //remove blank para
+        uncleanSGML = handler.replace(uncleanSGML, "<para></para>", "", 0);
+
         //remove screen texts from title
         uncleanSGML = removeScreensFromTitle(uncleanSGML);
 

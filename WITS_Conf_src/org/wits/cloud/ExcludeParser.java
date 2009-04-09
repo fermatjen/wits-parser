@@ -15,9 +15,9 @@
  * input used in their production; they are not affected by this license.
  *
  */
-
 package org.wits.cloud;
 
+import java.util.StringTokenizer;
 import org.wits.debugger.WITSDebugger;
 import org.wits.patterns.StringHandler;
 
@@ -124,9 +124,43 @@ public class ExcludeParser {
             debugger.showDebugMessage("ExcludeIC", l_loc, "Found hidden content.");
             //hidden excerpt is present
             debugger.showDebugMessage("ExcludeIC", l_loc, "Excluding hidden content.");
-            _handle.append(uncleanSGML.substring(offset, l_loc));
+
+            //Check WITS targets in the hidden content
+            String witsTarget = uncleanSGML.substring(l_loc + 21, r_loc);
+            boolean hasWitsTarget = false;
+
+            if (witsTarget.indexOf("<LB>\r\n") != -1) {
+                witsTarget = handler.replace(witsTarget, "<LB>\r\n", "").trim();
+
+                if (witsTarget.startsWith("#WITSTarget:")) {
+                    hasWitsTarget = true;
+                }
+            }
+
+            if (hasWitsTarget) {
+                //Get the WITS targets
+                //System.out.println(witsTarget);
+                StringTokenizer stok = new StringTokenizer(witsTarget, "=");
+                stok.nextToken();
+                String targetAttrs = stok.nextToken();
+
+                if (witsTarget.indexOf("START") != -1) {
+                    //Start of target text
+                    _handle.append(uncleanSGML.substring(offset, l_loc));
+                    _handle.append("\r\n");
+                    _handle.append("<WITSTarget id=\"" + targetAttrs + "\">");
+                }
+                else{
+                    //end of target text
+                    _handle.append(uncleanSGML.substring(offset, l_loc));
+                    _handle.append("\r\n");
+                    _handle.append("</WITSTarget>");
+                }
+            } else {
+                _handle.append(uncleanSGML.substring(offset, l_loc));
+            }
             //_handle.append(uncleanSGML.substring(r_loc + 9, r_loc + 10));
-            offset = r_loc + 10;
+            offset = r_loc + 9;
         }
         uncleanSGML = _handle.toString();
         //remove section anchors
