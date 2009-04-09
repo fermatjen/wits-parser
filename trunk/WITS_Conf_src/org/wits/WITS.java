@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.zip.ZipOutputStream;
 import org.wits.debugger.WITSDebugger;
+import org.wits.processors.TargetProcessor;
 import org.wits.test.TestHandler;
 import org.wits.writer.solbookwriter.SolChapterWriter;
 import org.wits.writer.WITSFileWriter;
@@ -48,6 +49,7 @@ public class WITS {
     //There could be diff. brands
     //Passing brand is mandatory
     private static String configPath = null;
+    private static String targetAttrs = null;
     private static WITSProperties props = null;
     private static boolean outputDir = false;
     private static boolean isSilent = false;
@@ -98,6 +100,7 @@ public class WITS {
         //Init Properties
         props = new WITSProperties();
         inputFiles = new ArrayList<String>();
+        targetAttrs = "all";
 
         //Create a WITS Instance
         WITSInstance witsInstance = new WITSInstance();
@@ -147,7 +150,7 @@ public class WITS {
         }
 
         if (arsLength == 1) {
-            if (ar[0].equalsIgnoreCase("--compress") || ar[0].equalsIgnoreCase("--silent") || ar[0].equalsIgnoreCase("--outputdir") || ar[0].equalsIgnoreCase("--solbook") || ar[0].equalsIgnoreCase("--docbook") || ar[0].equalsIgnoreCase("--dita") || ar[0].equalsIgnoreCase("--test") || ar[0].equalsIgnoreCase("--force") || ar[0].equalsIgnoreCase("--config")) {
+            if (ar[0].equalsIgnoreCase("--target") || ar[0].equalsIgnoreCase("--compress") || ar[0].equalsIgnoreCase("--silent") || ar[0].equalsIgnoreCase("--outputdir") || ar[0].equalsIgnoreCase("--solbook") || ar[0].equalsIgnoreCase("--docbook") || ar[0].equalsIgnoreCase("--dita") || ar[0].equalsIgnoreCase("--test") || ar[0].equalsIgnoreCase("--force") || ar[0].equalsIgnoreCase("--config")) {
                 printUsage();
             }
         }
@@ -236,6 +239,21 @@ public class WITS {
             }
         }
 
+        //Check for target options
+        for(int i=0; i< arsLength; i++){
+            if (ar[i].equalsIgnoreCase("--target")) {
+                if (i == arsLength) {
+                    printUsage();
+                }
+                targetAttrs = ar[i + 1];
+                
+                if (!isSilent) {
+                    System.out.println("   Target Options..."+targetAttrs);
+                }
+                break;
+            }
+        }
+
         //Check for output path
 
         for (int i = 0; i < arsLength; i++) {
@@ -270,6 +288,10 @@ public class WITS {
                 i++;
                 continue;
             }
+            if (ar[i].equalsIgnoreCase("--target")) {
+                i++;
+                continue;
+            }
             aLength++;
         }
 
@@ -285,6 +307,10 @@ public class WITS {
                 continue;
             }
             if (ar[i].equalsIgnoreCase("--outputdir")) {
+                i++;
+                continue;
+            }
+            if (ar[i].equalsIgnoreCase("--target")) {
                 i++;
                 continue;
             }
@@ -347,6 +373,11 @@ public class WITS {
                 String cleanSGML = null;
                 try {
                     cleanSGML = processor.process();
+                    //Process targets here
+
+                    TargetProcessor targetProcessor = new TargetProcessor(cleanSGML,targetAttrs);
+                    cleanSGML = targetProcessor.getOutputText();
+                    
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     writeParserErrorOutput(ex.getClass().getName() + "\r\n" + ex.getMessage());
