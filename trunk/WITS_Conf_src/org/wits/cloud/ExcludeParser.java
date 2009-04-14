@@ -136,7 +136,7 @@ public class ExcludeParser {
         }
         else{
             if(startTagCount > 0){
-                System.out.println("   Found WITS Targets: "+startTagCount);
+                System.out.println("   WITS Targets [Source]: "+startTagCount);
             }
         }
         //exclude hidden content
