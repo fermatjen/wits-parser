@@ -56,6 +56,9 @@ public class TargetProcessor {
     }
 
     public void buildSourceTargetAttrs(String stargetAttrs) {
+        //Flush the source targets.
+        sourceTargetAttrs.clear();
+        
         if (stargetAttrs.indexOf(",") == -1) {
             //single attr
             //System.out.println("SRCTRGT:"+stargetAttrs);
@@ -79,6 +82,9 @@ public class TargetProcessor {
 
         int offset = 0;
         StringBuilder _handle = new StringBuilder();
+
+        int matchCount = 0;
+        
         while (true) {
             int l_loc = inputText.indexOf("<WITSTarget id=", offset);
             int r_loc = inputText.indexOf("</WITSTarget>", l_loc);
@@ -107,19 +113,22 @@ public class TargetProcessor {
                 String sourceAttr = sourceTargetAttrs.get(i);
 
                 if (matchTargetAttrs.contains(sourceAttr)) {
-                    //display the snippet.
-                    System.out.println("   Target Match..."+sourceAttr);
+                    //System.out.println("M....."+matchTargetAttrs.toString());
+                    //System.out.println("S....."+sourceTargetAttrs.toString());
+                    //display the snippet.                    
+                    //System.out.println("   Target Match..."+sourceAttr);
                     isBlockVisible = true;
                     break;
                 }
             }
 
             //override for all target
-            if(targetAttrs.equals("all")){
+            if(targetAttrs.equals("all")){                
                 isBlockVisible = true;
             }
 
             if (isBlockVisible) {
+                matchCount++;
                 _handle.append(inputText.substring(offset, l_loc));
                 _handle.append(inputText.substring(ll_loc+1, r_loc));
                 offset = r_loc + 13;
@@ -133,6 +142,7 @@ public class TargetProcessor {
 
         }
 
+        System.out.println("   WITS Targets [Match]: "+matchCount);
         return _handle.toString();
     }
 }
