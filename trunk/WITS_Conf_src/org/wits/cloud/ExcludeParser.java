@@ -74,6 +74,25 @@ public class ExcludeParser {
         uncleanSGML = _handle.toString();
     }
 
+    private int getWordCount(String text, String pattern){
+
+        int i = 0;
+        int count = 0;
+
+        while(true){
+
+            int index = text.indexOf(pattern,i);
+            if(index != -1){
+                i = index+1;
+                count++;
+            }
+            else{
+                break;
+            }
+        }
+        return count;
+    }
+
     /**
      *
      * @return
@@ -105,6 +124,21 @@ public class ExcludeParser {
         // uncleanSGML = handler.replace(uncleanSGML, "{panel}", "");
 
         debugger.showDebugMessage("ExcludeIC", 0, "Excluding hidden content.");
+
+        //Check WITS Targets
+        int startTagCount = getWordCount(uncleanSGML,"#WITSTarget:START");
+        int endTagCount = getWordCount(uncleanSGML,"#WITSTarget:END");
+
+        if(startTagCount != endTagCount){
+            //Fatal Error
+            System.out.println("   FATAL ERROR: You have used WITS Targets. The count of START handlers and END handlers do not macth");
+            System.exit(0);
+        }
+        else{
+            if(startTagCount > 0){
+                System.out.println("   Found WITS Targets: "+startTagCount);
+            }
+        }
         //exclude hidden content
         int offset = 0;
         StringBuilder _handle = new StringBuilder();
@@ -126,36 +160,32 @@ public class ExcludeParser {
             debugger.showDebugMessage("ExcludeIC", l_loc, "Excluding hidden content.");
 
             //Check WITS targets in the hidden content
-            String witsTarget = uncleanSGML.substring(l_loc + 21, r_loc);
-            boolean hasWitsTarget = false;
+            String witsTarget = uncleanSGML.substring(l_loc + 21, r_loc);            
 
             if (witsTarget.indexOf("<LB>\r\n") != -1) {
                 witsTarget = handler.replace(witsTarget, "<LB>\r\n", "").trim();
-
-                if (witsTarget.startsWith("#WITSTarget:")) {
-                    hasWitsTarget = true;
-                }
             }
 
-            if (hasWitsTarget) {
+            if (witsTarget.indexOf("#WITSTarget:START") != -1) {
                 //Get the WITS targets
-                //System.out.println(witsTarget);
+                //System.out.println("WITSSTART:" + witsTarget);
                 StringTokenizer stok = new StringTokenizer(witsTarget, "=");
                 stok.nextToken();
                 String targetAttrs = stok.nextToken();
 
-                if (witsTarget.indexOf("START") != -1) {
-                    //Start of target text
-                    _handle.append(uncleanSGML.substring(offset, l_loc));
-                    _handle.append("\r\n");
-                    _handle.append("<WITSTarget id=\"" + targetAttrs + "\">");
-                }
-                else{
-                    //end of target text
-                    _handle.append(uncleanSGML.substring(offset, l_loc));
-                    _handle.append("\r\n");
-                    _handle.append("</WITSTarget>");
-                }
+                //if (witsTarget.indexOf("START") != -1) {
+                //Start of target text
+                _handle.append(uncleanSGML.substring(offset, l_loc));
+                _handle.append("\r\n");
+                _handle.append("<WITSTarget id=\"" + targetAttrs + "\">");
+
+            }
+            else if (witsTarget.indexOf("#WITSTarget:END") != -1) {
+                //end of target text
+                //System.out.println("WITSEND:" + witsTarget);
+                _handle.append(uncleanSGML.substring(offset, l_loc));
+                _handle.append("\r\n");
+                _handle.append("</WITSTarget>");
             } else {
                 _handle.append(uncleanSGML.substring(offset, l_loc));
             }
