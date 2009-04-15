@@ -74,19 +74,18 @@ public class ExcludeParser {
         uncleanSGML = _handle.toString();
     }
 
-    private int getWordCount(String text, String pattern){
+    private int getWordCount(String text, String pattern) {
 
         int i = 0;
         int count = 0;
 
-        while(true){
+        while (true) {
 
-            int index = text.indexOf(pattern,i);
-            if(index != -1){
-                i = index+1;
+            int index = text.indexOf(pattern, i);
+            if (index != -1) {
+                i = index + 1;
                 count++;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -98,6 +97,7 @@ public class ExcludeParser {
      * @return
      */
     public String getProcessedText() {
+
         debugger.addLineBreak();
         StringHandler handler = new StringHandler();
         handler.setDebugger(debugger);
@@ -126,22 +126,23 @@ public class ExcludeParser {
         debugger.showDebugMessage("ExcludeIC", 0, "Excluding hidden content.");
 
         //Check WITS Targets
-        int startTagCount = getWordCount(uncleanSGML,"#WITSTarget:START");
-        int endTagCount = getWordCount(uncleanSGML,"#WITSTarget:END");
+        int startTagCount = getWordCount(uncleanSGML, "#WITSTarget:START");
+        int endTagCount = getWordCount(uncleanSGML, "#WITSTarget:END");
 
-        if(startTagCount != endTagCount){
+        if (startTagCount != endTagCount) {
             //Fatal Error
             System.out.println("   FATAL ERROR: You have used WITS Targets. The count of START handlers and END handlers do not macth");
             System.exit(0);
-        }
-        else{
-            if(startTagCount > 0){
-                System.out.println("   WITS Targets [Source]: "+startTagCount);
+        } else {
+            if (startTagCount > 0) {
+                System.out.println("   WITS Targets [Source]: " + startTagCount);
             }
         }
         //exclude hidden content
         int offset = 0;
         StringBuilder _handle = new StringBuilder();
+
+
         while (true) {
             int l_loc = uncleanSGML.indexOf("{excerpt:hidden=true", offset);
             int r_loc = uncleanSGML.indexOf("{excerpt}", l_loc);
@@ -160,7 +161,7 @@ public class ExcludeParser {
             debugger.showDebugMessage("ExcludeIC", l_loc, "Excluding hidden content.");
 
             //Check WITS targets in the hidden content
-            String witsTarget = uncleanSGML.substring(l_loc + 21, r_loc);            
+            String witsTarget = uncleanSGML.substring(l_loc + 21, r_loc);
 
             if (witsTarget.indexOf("<LB>\r\n") != -1) {
                 witsTarget = handler.replace(witsTarget, "<LB>\r\n", "").trim();
@@ -176,23 +177,27 @@ public class ExcludeParser {
                 //if (witsTarget.indexOf("START") != -1) {
                 //Start of target text
                 _handle.append(uncleanSGML.substring(offset, l_loc));
-                _handle.append("\r\n");
+                _handle.append("<LB>\r\n<LB>\r\n");
                 _handle.append("<WITSTarget id=\"" + targetAttrs + "\">");
+                _handle.append("<LB>\r\n");
 
-            }
-            else if (witsTarget.indexOf("#WITSTarget:END") != -1) {
+            } else if (witsTarget.indexOf("#WITSTarget:END") != -1) {
                 //end of target text
                 //System.out.println("WITSEND:" + witsTarget);
                 _handle.append(uncleanSGML.substring(offset, l_loc));
-                _handle.append("\r\n");
+                _handle.append("<LB>\r\n");
                 _handle.append("</WITSTarget>");
+                _handle.append("<LB>\r\n<LB>\r\n");
             } else {
                 _handle.append(uncleanSGML.substring(offset, l_loc));
             }
             //_handle.append(uncleanSGML.substring(r_loc + 9, r_loc + 10));
             offset = r_loc + 9;
         }
+
         uncleanSGML = _handle.toString();
+
+        //System.out.println("--------------------" + uncleanSGML);
         //remove section anchors
         uncleanSGML = removeSectionAnchors(uncleanSGML);
 

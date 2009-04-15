@@ -74,7 +74,7 @@ public class PostProcessor {
         uncleanSGML = handler.replace(uncleanSGML, "<LB><para>", "<para>", 0);
         //System.out.println("--------"+uncleanSGML);
         uncleanSGML = handler.replace(uncleanSGML, "<para><LB>\r\n</para>", "", 0);
-        //uncleanSGML = handler.replace(uncleanSGML, "???", "-", 0);
+        uncleanSGML = handler.replace(uncleanSGML, "???", "-", 0);
 
         uncleanSGML = handler.replace(uncleanSGML, "<FLB>", "", 0);
         uncleanSGML = handler.replace(uncleanSGML, "%%%%%", "#", 0);

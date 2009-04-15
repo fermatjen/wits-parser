@@ -80,6 +80,8 @@ public class TargetProcessor {
         //First build the target list
         buildMatchTargetAttrs();
 
+        //System.out.println("----------------------\r\n"+inputText+"\r\n------------------");
+
         int offset = 0;
         StringBuilder _handle = new StringBuilder();
 
@@ -94,6 +96,18 @@ public class TargetProcessor {
                 break;
             }
 
+            boolean isBlockVisible = false;
+
+            String targetSnippet = inputText.substring(l_loc,r_loc);
+            //Check if sections are in the snippet
+            if(targetSnippet.indexOf("</sect") != -1 || targetSnippet.indexOf("<sect") != -1){
+                System.out.println("   FATAL ERROR: Sections inside the WITS Target blocks!\r\n");
+                System.out.println("PRINTING OFFENDING BLOCK------------------------------------------------");
+                System.out.println(targetSnippet);
+                System.out.println("END OF OFFENDING BLOCK--------------------------------------------------");
+                System.exit(0);
+            }
+
             int ll_loc = inputText.indexOf(">", l_loc);
 
             String sTargetAttrs = inputText.substring(l_loc + 16, ll_loc - 1);
@@ -104,9 +118,7 @@ public class TargetProcessor {
             buildSourceTargetAttrs(sTargetAttrs);
 
             //check if any of the match target attr matches with
-            //the source target attrs
-
-            boolean isBlockVisible = false;
+            //the source target attrs            
 
             for (int i = 0; i < sourceTargetAttrs.size(); i++) {
                 //even if atleast one source target matches the pattern, display it

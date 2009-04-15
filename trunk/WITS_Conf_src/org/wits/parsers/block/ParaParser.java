@@ -61,6 +61,20 @@ public class ParaParser implements WITSParser{
         StringHandler handler = new StringHandler();
         handler.setDebugger(debugger);
 
+        //Before processing paras clean the screen bugs
+        uncleanSGML = handler.replace(uncleanSGML, "<noparse><LB>\r\n", "<LB>\r\n<noparse>", 0);
+        uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n ", "<LB>\r\n", 0);
+        uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n  ", "<LB>\r\n", 0);
+        uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n   ", "<LB>\r\n", 0);
+        uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n    ", "<LB>\r\n", 0);
+        uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n     ", "<LB>\r\n", 0);
+        uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n      ", "<LB>\r\n", 0);
+        uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n       ", "<LB>\r\n", 0);
+        uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n        ", "<LB>\r\n", 0);
+        uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n         ", "<LB>\r\n", 0);
+        uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n           ", "<LB>\r\n", 0);
+
+
         StringBuilder _handle = new StringBuilder();
         int offset = 0;
 
