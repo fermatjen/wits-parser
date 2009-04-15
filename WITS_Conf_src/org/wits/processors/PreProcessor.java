@@ -83,6 +83,7 @@ public class PreProcessor {
      * @return
      */
     public String getProcessedText() {
+        
         debugger.addLineBreak();
         debugger.showDebugMessage("PreProcessor", 0, "Pre-Processor Invoked.");
 
@@ -98,9 +99,9 @@ public class PreProcessor {
 
         //System.out.println("Test:"+uncleanSGML);
         
-        if(uncleanSGML.indexOf("<LB>\r\n<LB>\r\n<noparse>") != -1){
-            uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n<LB>\r\n<noparse>", "<noparse>");
-        }
+        //if(uncleanSGML.indexOf("<LB>\r\n<LB>\r\n<noparse>") != -1){
+            //uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n<LB>\r\n<noparse>", "<noparse>");
+       // }
                         
         uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n#***", "<LB>\r\n####");
         uncleanSGML = handler.replace(uncleanSGML, "<LB>\r\n#**", "<LB>\r\n###");
@@ -215,6 +216,7 @@ public class PreProcessor {
         uncleanSGML = handler.replace(uncleanSGML, "\\#", "#", 0);
 
         debugger.showDebugMessage("PreProcessor", 0, "Pre-Processing Done.");
+        
         return uncleanSGML;
     }
 }

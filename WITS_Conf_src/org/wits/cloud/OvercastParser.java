@@ -97,10 +97,10 @@ public class OvercastParser {
 
             overcastText = handler.replace(overcastText, "<", "&lt;", 0);
 
-            _handle.append("<screen>");
+            _handle.append("<LB>\r\n<screen>");
             overcastText = cleanLBs(overcastText);
             _handle.append(overcastText);
-            _handle.append("</screen>");
+            _handle.append("</screen><LB>\r\n");
 
             offset = r_loc + 10;
         }
@@ -202,8 +202,8 @@ public class OvercastParser {
 
         while (true) {
             //check for code occurence
-            int l_loc = uncleanSGML.indexOf("{code", offset + 1);
-            int r_loc = uncleanSGML.indexOf("{code}", l_loc + 5);
+            int l_loc = uncleanSGML.indexOf("{code", offset);
+            int r_loc = uncleanSGML.indexOf("{code}", l_loc + 1);
 
             //System.out.println(l_loc + ":" + r_loc);
 
@@ -231,14 +231,18 @@ public class OvercastParser {
             if (_c1 != '\n' && _c2 != '\r') {
                 //literal text
                 _handle.append(uncleanSGML.substring(offset, l_loc));
+                _handle.append("<LB>\r\n");
                 _handle.append("<noparse>```" + overcastID + " ");
                 _handle.append("</noparse>");
+                _handle.append("<LB>\r\n");
                 overcastID++;
             } else {
                 //could be a block?
                 _handle.append(uncleanSGML.substring(offset, l_loc));
+                _handle.append("<LB>\r\n");
                 _handle.append("<noparse>```" + overcastID + " ");
                 _handle.append("</noparse>");
+                _handle.append("<LB>\r\n");
                 overcastID++;
             }
 
@@ -281,14 +285,18 @@ public class OvercastParser {
             if (_c1 != '\n' && _c2 != '\r') {
                 //literal text
                 _handle.append(uncleanSGML.substring(offset, l_loc));
+                _handle.append("<LB>\r\n<LB>\r\n");
                 _handle.append("<noparse>```" + overcastID + " ");
                 _handle.append("</noparse>");
+                _handle.append("<LB>\r\n<LB>\r\n");
                 overcastID++;
             } else {
                 //could be a block?
                 _handle.append(uncleanSGML.substring(offset, l_loc));
+                _handle.append("<LB>\r\n<LB>\r\n");
                 _handle.append("<noparse>```" + overcastID + " ");
                 _handle.append("</noparse>");
+                _handle.append("<LB>\r\n<LB>\r\n");
                 overcastID++;
             }
 

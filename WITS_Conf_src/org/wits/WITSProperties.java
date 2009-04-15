@@ -32,7 +32,7 @@ import java.util.StringTokenizer;
 public class WITSProperties {
 
     public static String WITS_BrandName = "WITS [Confluence Parser] - fermatjen@yahoo.com";
-    public static String WITS_VersionName = "V0.7.3_SVN_Apr14_2009";
+    public static String WITS_VersionName = "V0.7.3_SVN_Apr15_2009";
     public static String WITS_AllienBrandMessage = "This is WITS - Confluence Parser. Your input file[s] may have alien wiki content. Use the correct WITS Parser or use the --force option.";
     public static String WITS_MailingList = "fermatjen@yahoo.com";
     public static String WITS_UsageString1 = "\r\njava -jar WITS.jar <inputFile> or <inputDir>\r\n\r\nOther Options:\r\n\r\n[--docbook]    - Enable DocBook Output.\r\n[--test]    - Do not write output to file.\r\n[--force]    - Force conversion for alien wiki formats.\r\n[--outputdir <path>]    - Provide the path to output Dir.\r\n[--compress]    - Creates a compressed archive of the output.\r\n[--silent]    - Do not print output.\r\n[--config <configFile>]    - Provide a configuration file.\r\n[--target attr1,attr2..]    - Provide the WITS Targets to Show/Hide Content.\r\n";

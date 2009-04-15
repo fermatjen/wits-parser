@@ -114,8 +114,8 @@ public class ScriptParser implements WITSParser {
         _handle = new StringBuilder();
 
         while (true) {
-            int l_loc = uncleanSGML.indexOf("!", offset + 1);
-            int r_loc = uncleanSGML.indexOf("!", l_loc + 1);
+            int l_loc = uncleanSGML.indexOf("<LB>\r\n!", offset + 1);
+            int r_loc = uncleanSGML.indexOf("!", l_loc);
 
             //System.out.println("LOC:" + l_loc + " ROC:" + r_loc);
 
@@ -124,7 +124,7 @@ public class ScriptParser implements WITSParser {
                 break;
             }
 
-            String scriptCandidate = uncleanSGML.substring(l_loc, r_loc);
+            String scriptCandidate = uncleanSGML.substring(l_loc + 6, r_loc);
             //System.out.println("SCAND:" + scriptCandidate);
             //Check if filename and title can be extracted.
             String imageFileName = "Unknown.gif";
@@ -190,6 +190,7 @@ public class ScriptParser implements WITSParser {
         offset = 0;
         _handle = new StringBuilder();
 
+
         while (true) {
             int l_loc = uncleanSGML.indexOf("{column:", offset);
             int r_loc = uncleanSGML.indexOf("{column}", l_loc + 1);
@@ -239,6 +240,7 @@ public class ScriptParser implements WITSParser {
         handler = new StringHandler();
         handler.setDebugger(debugger);
         uncleanSGML = handler.replace(uncleanSGML, "{section}", "");
+
 
         //Hnadle info
         offset = 0;
@@ -331,22 +333,26 @@ public class ScriptParser implements WITSParser {
             String bqCandidate = uncleanSGML.substring(ll_loc + 1, r_loc);
 
             _handle.append(uncleanSGML.substring(offset, l_loc));
-            bqCandidate = handler.replace(bqCandidate, "<LB>\r\n", " ");
+            //System.out.println("NOTE:"+bqCandidate+"----");
+            if (!bqCandidate.endsWith("<LB>\r\n")) {
+                //bqCandidate = handler.replace(bqCandidate, "<LB>\r\n", " ");
+            }
 
             bqCandidate = bqCandidate.trim();
 
             if (bqCandidate.indexOf("<noparse>") != -1 || bqCandidate.indexOf("<mediaobject>") != -1) {
+                //System.out.println("NONOTE:"+bqCandidate);
                 _handle.append("<para>" + bqCandidate + "</para>");
             } else {
                 _handle.append("<note><para>" + bqCandidate + "</para></note>");
             }
 
-            offset = r_loc;
+            offset = r_loc+6;
         }
         uncleanSGML = _handle.toString();
         handler = new StringHandler();
         handler.setDebugger(debugger);
-        uncleanSGML = handler.replace(uncleanSGML, "{note}", "");
+        //uncleanSGML = handler.replace(uncleanSGML, "{note}", "");
 
         //Hnadle tip
         offset = 0;
@@ -367,7 +373,7 @@ public class ScriptParser implements WITSParser {
             String bqCandidate = uncleanSGML.substring(ll_loc + 1, r_loc);
 
             _handle.append(uncleanSGML.substring(offset, l_loc));
-            bqCandidate = handler.replace(bqCandidate, "<LB>\r\n", " ");
+            //bqCandidate = handler.replace(bqCandidate, "<LB>\r\n", " ");
 
             bqCandidate = bqCandidate.trim();
 

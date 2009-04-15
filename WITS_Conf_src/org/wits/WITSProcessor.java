@@ -148,8 +148,7 @@ public class WITSProcessor {
         //run overcast parser before parsing the text.
         OvercastParser overParser = new OvercastParser(uncleanSGML);
         overParser.setDebugger(debugger);
-        uncleanSGML = overParser.getProcessedText();
-        //System.out.println("OVERCAST OP:\r\n"+uncleanSGML);
+        uncleanSGML = overParser.getProcessedText();        
 
         //we support only confluence.
         if (!isForceParsing) {
@@ -181,13 +180,13 @@ public class WITSProcessor {
         //Remove excess baggage
         ExcludeParser exICParser = new ExcludeParser(uncleanSGML);
         exICParser.setDebugger(debugger);
-        uncleanSGML = exICParser.getProcessedText();
+        uncleanSGML = exICParser.getProcessedText();        
 
         //Remove excess baggage
         ScriptParser scriptParser = new ScriptParser(witsInstance, uncleanSGML);
         scriptParser.setDebugger(debugger);
         uncleanSGML = scriptParser.getProcessedText();
-        witsInstance = scriptParser.getWitsInstance();
+        witsInstance = scriptParser.getWitsInstance();          
         
         //Call Pre Processor        
         PreProcessor preICParser = new PreProcessor(uncleanSGML);
