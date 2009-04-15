@@ -58,6 +58,48 @@ public class OvercastParser {
         return content;
     }
 
+    private String forceLBs(String content){
+        //Force a LB at 50th char.
+        int maxPos = 50;
+        int maxTolLimit = 15;
+
+        int LBIndex = content.indexOf("&lt;LB>",1);
+
+        if(LBIndex <= maxPos){
+            return content;
+        }
+        else{
+            maxTolLimit = LBIndex - maxPos;
+        }
+        
+        int length = content.length();
+
+        //System.out.println("S:"+content);
+
+        if(length <= maxPos){
+            return content;
+        }
+
+        int breakAt = maxPos;
+
+        breakAt = content.indexOf(" ",breakAt);
+        int tbreakAt = breakAt;
+
+        if(breakAt >= maxPos + maxTolLimit){
+            breakAt = maxPos;
+        }
+        else{
+            breakAt = tbreakAt;
+        }
+
+        if(breakAt == -1){
+            breakAt = maxPos;
+        }
+        //System.out.println(breakAt+":"+length);
+
+        return content.substring(0, breakAt)+"&lt;LB>\r\n"+content.substring(breakAt+1, length);
+    }
+
     /**
      *
      * @param uncleanSGML
@@ -98,7 +140,10 @@ public class OvercastParser {
             overcastText = handler.replace(overcastText, "<", "&lt;", 0);
 
             _handle.append("<LB>\r\n<screen>");
+            
+            overcastText = forceLBs(overcastText);
             overcastText = cleanLBs(overcastText);
+            
             _handle.append(overcastText);
             _handle.append("</screen><LB>\r\n");
 
